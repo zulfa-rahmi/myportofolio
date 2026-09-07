@@ -3,53 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zulfa Rahmi Nasution - Portfolio</title>
+    <title>Zulfa Rahmi - Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Satisfy:wght@400&family=Lato:wght@400;500;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
+
+    <!-- NAVIGATION BAR -->
     <header class="site-header">
-        <div class="container">
-            <a href="#profile" class="brand">Zulfa Rahmi Nasution</a>
-            <nav>
-                <a href="#profile">Profile</a>
-            </nav>
-        </div>
+        <nav class="container">
+            <a href="#hero" class="nav-logo">Zulfa Rahmi</a>
+            
+            <ul class="nav-menu">
+                <li><a href="#about" class="nav-link">About Me</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#interest" class="nav-link">Interest</a></li>
+                <li><a href="#contact" class="btn-contact">Contact</a></li>
+            </ul>
+        </nav>
     </header>
 
     <main>
-        <section class="hero" id="profile">
-            <div class="container hero-grid">
-                <div class="hero-identity">
-                    <p class="hero-kicker">Information System &middot; Universitas Indonesia</p>
-                    <h1>Zulfa Rahmi Nasution</h1>
-                </div>
-                <div class="hero-photo">
-                    <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/rahmi.jpg" alt="Photo of Rahmi">
-                </div>
-                <div class="hero-details">
-                    <p class="bio">CS student at Universitas Indonesia for longer than planned, now a familiar (and slightly dreaded) face among Fasilkom students as a teaching assistant across several courses.</p>
-                    <dl class="meta-list">
-                        <div class="meta-row">
-                            <dt>NPM</dt>
-                            <dd>2506598324</dd>
-                        </div>
-                        <div class="meta-row">
-                            <dt>Program</dt>
-                            <dd>S1 Sistem Informasi</dd>
-                        </div>
-                    </dl>
-                    <div class="social-links">
-                        <a href="https://github.com/zulfa-rahmi" class="social-link">GitHub</a>
-                        <a href="https://www.linkedin.com/in/zulfa-rahmi-nasution" class="social-link">LinkedIn</a>
-                        <a href="mailto:zrahminasution@gmail.com" class="social-link">Email</a>
-                    </div>
-                </div>
+        <!-- HERO -->
+        <section class="hero" id="hero">
+            <div class="hero-text">
+                <p class="hero-greeting">Hi, my name is</p>
+                <h1 class="hero-name">ZULFA RAHMI NASUTION</h1>
+                <p class="hero-description">
+                    An Information Systems student at Universitas Indonesia passionate about Business Development, 
+                    Project Management, and Tech Innovation. Experienced in leadership and project execution 
+                    through various organizational roles, with a strong focus on strategic problem-solving and 
+                    stakeholder management.
+                </p>
+            </div>
+
+            <!-- GAMBAR PASPOR -->
+            <div class="hero-image">
+                <img src="/static/img/passport.png" alt="Zulfa Rahmi Nasution Photo" />
             </div>
         </section>
+
+    
+    <!-- EXPERIENCE -->
+    <section class="section section-alt" id="experience">
+      <div class="section-inner">
+        <h2 class="section-title">Experience</h2>
+        <p class="section-subtitle">Riwayat organisasi dan kepanitiaan.</p>
+
+        <div class="timeline">
+          <div class="timeline-line" aria-hidden="true"></div>
+          <article class="timeline-item timeline-left">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">2026 – Present</span>
+              <h3 class="timeline-role">Business Development PIC</h3>
+              <p class="timeline-org">Open House Fasilkom UI 2026 — Universitas Indonesia</p>
+              <p class="timeline-desc">Led budgeting and planning for merchandise, catering, and committee apparel while mentoring staff to drive division execution.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Business Development</li>
+                    <li class="skill-pill">Budgeting</li>
+                    <li class="skill-pill">Merchandising</li>
+                    <li class="skill-pill">Team Management</li>
+                    <li class="skill-pill">Project Management</li>
+                    <li class="skill-pill">Business Strategy</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-right">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">2026 – Present</span>
+              <h3 class="timeline-role">Project Management Staff</h3>
+              <p class="timeline-org">BEM Fasilkom UI — Universitas Indonesia</p>
+              <p class="timeline-desc">Handled end-to-end web project management, including client kick-offs, WBS creation, timeline scheduling, and budget planning.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Project Management</li>
+                    <li class="skill-pill">Project Planning</li>
+                    <li class="skill-pill">Work Breakdown Structure (WBS)</li>
+                    <li class="skill-pill">Budgeting</li>
+                    <li class="skill-pill">Client Management</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-left">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">Jan 2026 – Present</span>
+              <h3 class="timeline-role">Business Development Expert Staff</h3>
+              <p class="timeline-org">COMPFEST — Universitas Indonesia</p>
+              <p class="timeline-desc">Managed merchandise procurement, committee attributes, and e-commerce operations on Shopee to support event monetization.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Business Development</li>
+                    <li class="skill-pill">Merchandising</li>
+                    <li class="skill-pill">Procurement</li>
+                    <li class="skill-pill">E-commerce</li>
+                    <li class="skill-pill">Project Management</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-right">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">Januari 2026 – Mei 2026</span>
+              <h3 class="timeline-role">Partnership Staff</h3>
+              <p class="timeline-org">BETIS Fasilkom UI — Universitas Indonesia</p>
+              <p class="timeline-desc">Managed media partner outreach and promotional collaborations to boost event exposure and target audience reach.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Partnership Development</li>
+                    <li class="skill-pill">Business Communication</li>
+                    <li class="skill-pill">Outreach</li>
+                    <li class="skill-pill">Negotiation</li>
+                    <li class="skill-pill">Marketing</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-left">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">Oct 2025 – Nov 2025</span>
+              <h3 class="timeline-role">Debate Competition Staff</h3>
+              <p class="timeline-org">OIM Fasilkom UI — Universitas Indonesia</p>
+              <p class="timeline-desc">Managed debate session logistics, participant mobilization, and served as moderator and timekeeper to ensure schedule compliance.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Event Management</li>
+                    <li class="skill-pill">Public Speaking</li>
+                    <li class="skill-pill">Communication</li>
+                    <li class="skill-pill">Time Management</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-right">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">Aug 2025 – Dec 2025</span>
+              <h3 class="timeline-role">Business Development Staff</h3>
+              <p class="timeline-org">Open House Fasilkom UI — Universitas Indonesia</p>
+              <p class="timeline-desc">Managed merchandise production, sales, committee apparel, and consumption needs. Coordinated with internal teams and external vendors for timely distribution.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Business Development</li>
+                    <li class="skill-pill">Vendor Management</li>
+                    <li class="skill-pill">Supply Chain</li>
+                    <li class="skill-pill">Negotiation</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-left">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">2024 – 2025</span>
+              <h3 class="timeline-role">Vice Chairperson II</h3>
+              <p class="timeline-org">Forum MPK Daerah Khusus Jakarta</p>
+              <p class="timeline-desc">Contributed to organizational coordination, strategic planning, and program implementations across student councils in DK Jakarta.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Leadership</li>
+                    <li class="skill-pill">Strategic Planning</li>
+                    <li class="skill-pill">Public Speaking</li>
+                    <li class="skill-pill">Stakeholder Management</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-right">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">Aug 2023 – Aug 2024</span>
+              <h3 class="timeline-role">Vice Chairperson</h3>
+              <p class="timeline-org">MPK SMA Labschool Kebayoran</p>
+              <p class="timeline-desc">Supported program executions, coordinated student representatives, and led organizational discussions to drive student initiatives.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Organizational Leadership</li>
+                    <li class="skill-pill">Team Management</li>
+                    <li class="skill-pill">Communication</li>
+                    <li class="skill-pill">Problem Solving</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-left">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">Aug 2023 – Aug 2024</span>
+              <h3 class="timeline-role">Production Coordinator</h3>
+              <p class="timeline-org">Skylite Musicals — SMA Labschool Kebayoran</p>
+              <p class="timeline-desc">Coordinated production operations, stage management, and committee alignment for a large-scale musical theater performance.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Event Production</li>
+                    <li class="skill-pill">Project Coordination</li>
+                    <li class="skill-pill">Teamwork</li>
+                    <li class="skill-pill">Time Management</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-right">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">Aug 2023 – Jul 2024</span>
+              <h3 class="timeline-role">Secretary Coordinator</h3>
+              <p class="timeline-org">SkyWalk — SMA Labschool Kebayoran</p>
+              <p class="timeline-desc">Managed central administrative tasks, documentation, and communication flow for a major band competition event.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Administration</li>
+                    <li class="skill-pill">Documentation</li>
+                    <li class="skill-pill">Event Coordination</li>
+                    <li class="skill-pill">Communication</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-left">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">Jul 2023 – Jul 2024</span>
+              <h3 class="timeline-role">Editor in Chief</h3>
+              <p class="timeline-org">Skypress (Journalism Club) — SMA Labschool Kebayoran</p>
+              <p class="timeline-desc">Led the student journalism club, managed publication schedules, supervised editorial processes, and directed content creation.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Editorial Management</li>
+                    <li class="skill-pill">Content Strategy</li>
+                    <li class="skill-pill">Leadership</li>
+                    <li class="skill-pill">Media Production</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-right">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">Aug 2023 – May 2024</span>
+              <h3 class="timeline-role">Competition Coordinator</h3>
+              <p class="timeline-org">SkyNation — SMA Labschool Kebayoran</p>
+              <p class="timeline-desc">Oversaw competition logistics, participant management, and field execution for a marching competition.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Event Operations</li>
+                    <li class="skill-pill">Participant Relations</li>
+                    <li class="skill-pill">Conflict Resolution</li>
+                    <li class="skill-pill">Coordination</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-left">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">Aug 2023 – May 2024</span>
+              <h3 class="timeline-role">Finance Project Officer</h3>
+              <p class="timeline-org">Troops for Humanity — SMA Labschool Kebayoran</p>
+              <p class="timeline-desc">Supervised sponsorship acquisition, merchandise fundraising, and production budgeting to ensure smooth financial backing.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Financial Management</li>
+                    <li class="skill-pill">Fundraising</li>
+                    <li class="skill-pill">Sponsorship</li>
+                    <li class="skill-pill">Budgeting</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-right">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">Aug 2023 – Apr 2024</span>
+              <h3 class="timeline-role">Supply Project Officer</h3>
+              <p class="timeline-org">SkyRun — SMA Labschool Kebayoran</p>
+              <p class="timeline-desc">Handled procurement, supply logistics, and resource allocation for a 5K fun run event held at Gelora Bung Karno (GBK).</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Logistics</li>
+                    <li class="skill-pill">Procurement</li>
+                    <li class="skill-pill">Resource Management</li>
+                    <li class="skill-pill">Event Planning</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-left">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">Aug 2023 – Feb 2024</span>
+              <h3 class="timeline-role">Production Coordinator</h3>
+              <p class="timeline-org">SkyBattle — SMA Labschool Kebayoran</p>
+              <p class="timeline-desc">Coordinated production workflows, technical equipment, and venue setup for a multi-sport competition.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Production Management</li>
+                    <li class="skill-pill">Technical Logistics</li>
+                    <li class="skill-pill">Operations</li>
+                    <li class="skill-pill">Teamwork</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-item timeline-right">
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-card glass-card">
+              <span class="timeline-period">2023 – 2024</span>
+              <h3 class="timeline-role">Treasurer</h3>
+              <p class="timeline-org">PEMERIAH (Paskibra) — SMA Labschool Kebayoran</p>
+              <p class="timeline-desc">Managed organizational financial records, budgeting, and expense reporting to support all operational activities.</p>
+              <ul class="skill-pills" aria-label="Skills">
+                    <li class="skill-pill">Financial Administration</li>
+                    <li class="skill-pill">Bookkeeping</li>
+                    <li class="skill-pill">Budget Allocation</li>
+                    <li class="skill-pill">Accountability</li>
+              </ul>
+            </div>
+          </article>        </div>
+      </div>
+    </section>
+        
     </main>
 
     <footer class="site-footer">
