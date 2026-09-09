@@ -13,17 +13,10 @@
 
     <!-- NAVIGATION BAR -->
     <header class="site-header">
-        <nav class="container">
-            <a href="#hero" class="nav-logo">Zulfa Rahmi</a>
-            
-            <ul class="nav-menu">
-                <li><a href="#about" class="nav-link">About Me</a></li>
-                <li><a href="#experience" class="nav-link">Experience</a></li>
-                <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#interest" class="nav-link">Interest</a></li>
-                <li><a href="#contact" class="btn-contact">Contact</a></li>
-            </ul>
-        </nav>
+      <nav>
+          <a href="{% url 'main:show_main' %}">Profile</a>
+          <a href="{% url 'main:show_experience' %}">Experience</a>
+      </nav>
     </header>
 
     <main>
@@ -31,18 +24,15 @@
         <section class="hero" id="hero">
             <div class="hero-text">
                 <p class="hero-greeting">Hi, my name is</p>
-                <h1 class="hero-name">ZULFA RAHMI NASUTION</h1>
+                <h1 class="hero-name">{{ name }}</h1>
                 <p class="hero-description">
-                    An Information Systems student at Universitas Indonesia passionate about Business Development, 
-                    Project Management, and Tech Innovation. Experienced in leadership and project execution 
-                    through various organizational roles, with a strong focus on strategic problem-solving and 
-                    stakeholder management.
+                    {{ bio }}
                 </p>
             </div>
 
             <!-- GAMBAR PASPOR -->
             <div class="hero-image">
-                <img src="/static/img/passport.png" alt="Zulfa Rahmi Nasution Photo" />
+                <img src="/static/img/passport.png" alt="Photo of {{ name }}" />
             </div>
         </section>
 
@@ -307,7 +297,7 @@
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2026 Rahmi. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+            <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
         </div>
     </footer>
 </body>
