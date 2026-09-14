@@ -7,16 +7,24 @@
 :root {
     --ink: #1c1917;
     --paper: #FFFCF8;
+    --muted: #6B5E73;
+
     --button-pink: #E7668C;
     --button-green: #D0DBB1;
     --header-footer: #B0CFEB;
+
     --gradient-start: #FBF4EA; 
     --gradient-end: #D2C0EA;
 
+    --coral: #E07A7A;
+    --teal: #79BEC2;
     --accent-yellow: #F6E27B;  
-    --pill-bg: #EAE6FE;        
+    --pill-bg: #F3E8FF; 
+    --pill-ink: #6B21A8;
+
     --card-bg: #FFFFFF;        
-    --radius: 12px;
+    --radius: 16px;
+    --shadow-soft: 0 10px 30px rgba(100, 80, 140, 0.12);
 }
 
 body {
@@ -24,6 +32,29 @@ body {
     color: var(--ink);
     background-color: var(--paper);
     line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.script-title {
+    font-family: 'Satisfy', cursive;
+    font-weight: 400;
+    font-size: 3.2rem;
+    text-align: center;
+    color: var(--ink);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--muted);
+    font-style: italic;
+    padding: 3rem 1rem;
+    grid-column: 1 / -1;
 }
 
 /* ==========================================================================

@@ -1,8 +1,10 @@
 import uuid
 from django.db import models
+from django.utils import timezone
 
 class Experience(models.Model):
     EXPERIENCE_CHOICES = [
+        ('organization', 'Organization'),
         ('internship', 'Internship'),
         ('research', 'Research'),
         ('volunteer', 'Volunteer'),
@@ -24,3 +26,24 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+class Project(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    event = models.CharField(max_length=255)
+    description = models.TextField()
+    year = models.PositiveIntegerField()
+    cover_image = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+    project_url = models.URLField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-year', 'title']
+
+    def __str__(self):
+        return self.title
+

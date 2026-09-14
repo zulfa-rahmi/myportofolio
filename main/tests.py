@@ -56,3 +56,37 @@ class MainTest(TestCase):
         self.assertFalse(self.experience.is_ongoing)
         self.assertContains(response, "Selesai")
         self.assertNotContains(response, "Sedang berlangsung")
+
+class ProjectTest(TestCase):
+    """Covers the three required cases for Projects section."""
+
+    def setUp(self):
+        self.project = Project.objects.create(
+            title="TwinStore AI",
+            event="Bizclash 3.0 2026",
+            description="An AI-powered application that simulates retail stores.",
+            year=2026,
+        )
+
+    def test_projects_url_is_accessible_and_uses_correct_template(self):
+        response = self.client.get(reverse("main:show_projects"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "projects.html")
+
+    def test_project_data_appears_when_data_exists(self):
+        response = self.client.get(reverse("main:show_projects"))
+
+        self.assertContains(response, self.project.title)
+        self.assertContains(response, self.project.event)
+        self.assertContains(response, self.project.description)
+        self.assertContains(response, "2026")
+
+    def test_projects_page_shows_empty_state_when_no_data(self):
+        Project.objects.all().delete()
+        response = self.client.get(reverse("main:show_projects"))
+
+        self.assertContains(response, "No projects have been added yet.")
+
+    def test_project_model_str(self):
+        self.assertEqual(str(self.project), "TwinStore AI")

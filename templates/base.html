@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Zulfa Rahmi{% endblock %} · Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Satisfy:wght@400&family=Lato:wght@400;500;700;800&family=DM+Mono:wght@400;500&family=Libre+Barcode+128&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <header class="site-header">
+        <nav>
+            <a class="brand" href="{% url 'main:show_main' %}">{{ name|default:"Zulfa Rahmi" }}</a>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+
+            <div class="nav-menu" id="navMenu">
+                <a class="nav-link {% if active_page == 'main' %}is-active{% endif %}" href="{% url 'main:show_main' %}#about">About Me</a>
+                <a class="nav-link {% if active_page == 'experience' %}is-active{% endif %}" href="{% url 'main:show_experience' %}">Experience</a>
+                <a class="nav-link {% if active_page == 'projects' %}is-active{% endif %}" href="{% url 'main:show_projects' %}">Projects</a>
+                <a class="btn-contact" href="mailto:zrahminasution@gmail.com">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 {{ name|default:"Zulfa Rahmi Nasution" }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+        </div>
+    </footer>
+    
+</body>
+</html>
