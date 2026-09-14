@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Projects{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <p class="page-kicker">Things I've built</p>
+    <h1 class="script-title">Projects</h1>
+</section>
+
+<section class="stamps-section">
+
+    <div class="stamps-grid">
+        {% for project in project_list %}
+            <article class="project-card">
+                <div class="project-cover">
+                    {% if project.thumbnail %}
+                        <img src="{% static project.thumbnail %}" alt="Preview of {{ project.title }}">
+                    {% else %}
+                        <div class="stamp-placeholder">{{ project.title }}</div>
+                    {% endif %}
+                    <span class="stamp-year">{{ project.year }}</span>
+                </div>
+
+                <div class="project-body">
+                    <h2>{{ project.title }}</h2>
+                    {% if project.event %}<p class="stamp-event">{{ project.event }}</p>{% endif %}
+                    <p class="stamp-desc">{{ project.description }}</p>
+
+                    {% if project.project_url %}
+                        <a class="stamp-link" href="{{ project.project_url }}" target="_blank" rel="noopener">
+                            View Project <span aria-hidden="true">&#8594;</span>
+                        </a>
+                    {% endif %}
+                </div>
+            </article>
+        {% empty %}
+            <p class="empty-state">No projects have been added yet.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
