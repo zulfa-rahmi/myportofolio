@@ -15,12 +15,11 @@
         {% for project in project_list %}
             <article class="project-card">
                 <div class="project-cover">
-                    {% if project.thumbnail %}
-                        <img src="{% static project.thumbnail %}" alt="Preview of {{ project.title }}">
+                    {% if project.cover_image %}
+                        <img src="{% static 'img/projects/' %}{{ project.cover_image }}" alt="Preview of {{ project.title }}">
                     {% else %}
                         <div class="stamp-placeholder">{{ project.title }}</div>
                     {% endif %}
-                    <span class="stamp-year">{{ project.year }}</span>
                 </div>
 
                 <div class="project-body">
