@@ -64,7 +64,7 @@ body {
 }
 
 /* ==========================================================================
-   NAVIGATION BAR (SIMPLE STACKED MOBILE MENU)
+   NAVIGATION BAR
    ========================================================================== */
 .site-header {
     background-color: var(--header-footer);
@@ -286,11 +286,10 @@ body {
 }
 
 /* ==========================================================================
-   ABOUT ME SECTION (REVISED)
+   ABOUT ME SECTION
    ========================================================================== */
 .about-section {
     position: relative;
-    /* Gradient dibalik: Terang (#FBF4EA) di atas, Gelap (#D2C0EA) di bawah */
     background: linear-gradient(180deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
     padding: 5rem 5% 6rem;
     overflow: hidden;
@@ -322,7 +321,6 @@ body {
     z-index: 1;
     max-width: 1000px;
     margin: 0 auto;
-    /* Background kartu dibuat putih transparan (glassmorphic) agar warna gradient di belakang tembus rapi */
     background: rgba(255, 252, 248, 0.85);
     backdrop-filter: blur(8px);
     border-radius: 28px;
@@ -330,20 +328,20 @@ body {
     padding: 3rem;
     display: flex;
     gap: 3.5rem;
-    align-items: center; /* Memastikan foto & teks sejajar di tengah secara vertikal */
+    align-items: center;
 }
 
 .about-photo {
     flex: 0 0 260px;
     display: flex;
-    align-items: center; /* Memastikan posisi foto presisi di tengah vertikal */
+    align-items: center;
 }
 
 .about-photo img {
     width: 100%;
     height: auto;
-    border-radius: 16px; /* Sudut foto dibuat sedikit melengkung rapi */
-    transform: rotate(0deg); /* Dibuat tegak lurus (tidak miring) */
+    border-radius: 16px;
+    transform: rotate(0deg);
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.12));
 }
 
@@ -489,7 +487,6 @@ body {
     transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
 }
 
-/* Slight scrapbook tilt, alternating per card */
 .ticket.tilt-left {
     transform: rotate(-3deg);
 }
@@ -527,9 +524,9 @@ body {
    ========================================================================== */
 .ticket-body {
     display: flex;
-    align-items: flex-start; /* Ubah dari center ke flex-start agar posisi tidak dipaksa ke tengah vertikal */
-    padding: 20px 15px 25px; /* Tambah padding bawah untuk ruang pesawat */
-    position: relative; /* Menjadi patokan utama absolute pesawat */
+    align-items: flex-start;
+    padding: 20px 15px 25px;
+    position: relative;
 }
 
 .ticket-barcode {
@@ -557,7 +554,7 @@ body {
     flex: 1;
     min-width: 0;
     text-align: left;
-    padding-right: 35px; /* Beri jarak di kanan agar teks tidak menutupi pesawat */
+    padding-right: 35px;
 }
 
 .ticket-role {
@@ -606,13 +603,12 @@ body {
     font-weight: 700;
 }
 
-/* Memaksa pesawat lepas dari flexbox dan terkunci di kanan bawah tiket */
 svg.ticket-plane {
     position: absolute !important;
     bottom: 24px !important;
     right: 24px !important;
-    width: 24px !important;  /* Dikunci lebarnya */
-    height: 24px !important; /* Dikunci tingginya */
+    width: 24px !important;
+    height: 24px !important;
     color: #444444;
     transform: rotate(90deg);
     pointer-events: none;
@@ -620,7 +616,7 @@ svg.ticket-plane {
 }
 
 /* ==========================================================================
-   PROJECTS PAGE — PLAIN CARDS (no JS)
+   PROJECTS PAGE — PLAIN CARDS
    ========================================================================== */
 .stamps-section {
     position: relative;
@@ -640,7 +636,7 @@ svg.ticket-plane {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 2rem;
-    align-items: stretch; /* Memaksa semua kartu dalam satu baris punya tinggi sama */
+    align-items: stretch;
 }
 
 .project-card {

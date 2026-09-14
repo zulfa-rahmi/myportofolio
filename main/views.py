@@ -34,6 +34,7 @@ def show_main(request):
 
 def show_experience(request):
     context = {
+        "active_page": "experience",
         "name": "Zulfa Rahmi Nasution",
         "experience_list": Experience.objects.all(),
     }
