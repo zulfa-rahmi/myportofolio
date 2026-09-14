@@ -12,3 +12,8 @@ Data portofolio dikelola menggunakan Model dan disimpan di dalam database, alih-
 
 Database Migration: makemigrations & migrate
 Dalam manajemen database Django, perintah makemigrations dan migrate memiliki peran yang saling melengkapi dalam mengelola perubahan struktur tabel (schema). Perintah makemigrations berfungsi untuk mengevaluasi perubahan pada file models.py dan mendokumentasikannya ke dalam berkas instruksi migrasi baru di folder migrations/ tanpa mengubah database secara langsung. Sementara itu, perintah migrate bertugas mengeksekusi instruksi dari berkas migrasi tersebut untuk memperbarui struktur tabel yang ada di dalam database nyata. Sebagai contoh, ketika terdapat penambahan bidang baru seperti created_at = models.DateField() pada model Portfolio, perintah makemigrations akan mencatat rancangan penambahan kolom tersebut, dan perintah migrate akan mengeksekusi penambahan kolom created_at ke dalam tabel database.
+
+AI DISCLOSURE
+Saya menggunakan AI gemini untuk memperbaiki tampilan css dan beberapa tampilan yang tidak muncul pada bagian web seperti gambar, organisasi, dan lain-lain
+
+Chat dengan gemini: https://gemini.google.com/share/d/1vK890OqxO4YDOPfcnuDQskwB-UMYFf3P?usp=sharing
