@@ -618,127 +618,211 @@ svg.ticket-plane {
 /* ==========================================================================
    PROJECTS PAGE — PLAIN CARDS
    ========================================================================== */
-.stamps-section {
-    position: relative;
-    background: var(--gradient-start);
-    padding: 2rem 5% 6rem;
-    overflow: hidden;
-}
 
-.decor-butterfly {
-    width: 130px;
-    left: 3%;
-    top: 8%;
-    transform: rotate(-8deg);
-}
-
-.stamps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2rem;
-    align-items: stretch;
-}
-
-.project-card {
-    background: var(--paper);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 10px 22px rgba(60, 40, 80, 0.15);
-    border: 2px solid #EADFF8;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.project-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 30px rgba(60, 40, 80, 0.22);
-}
-
-.project-cover {
-    position: relative;
-    aspect-ratio: 16 / 9;
-}
-
-.project-cover img {
+.project-header {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.stamp-placeholder {
-    width: 100%;
-    height: 100%;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    background: var(--pill-bg);
-    color: var(--pill-ink);
-    font-weight: 700;
-    text-align: center;
-    padding: 1rem;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-.stamp-year {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: rgba(255, 255, 255, 0.85);
-    color: var(--ink);
-    font-size: 0.72rem;
-    font-weight: 800;
-    padding: 0.15rem 0.5rem;
-    border-radius: 10px;
+.project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.project-body {
-    padding: 1rem;
-    text-align: left;
+.project-grid .experience-card {
     display: flex;
     flex-direction: column;
-    flex: 1;
 }
 
-.project-body h2 {
-    font-size: 1rem;
-    font-weight: 800;
-    margin-bottom: 0.2rem;
+.project-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid black;
+    border-radius: var(--radius);
 }
 
-.stamp-event {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--button-pink);
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    margin-bottom: 0.4rem;
+.project-header h1 {
+    margin-bottom: 0;
 }
 
-.stamp-desc {
-    font-size: 0.82rem;
-    color: #3f3a45;
-    line-height: 1.5;
-    margin-bottom: 0.7rem;
-}
-
-.stamp-link {
+.project-add-button {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--ink);
-    text-decoration: none;
-    border-top: 1px dashed #cbb9e8;
-    margin-top: auto;
-    padding-top: 0.6rem;
-    width: 100%;
+    gap: 0.45rem;
 }
 
-.stamp-link:hover {
-    color: var(--button-pink);
+.project-add-button span {
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.project-search {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.project-search__input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+}
+
+.project-search__input:focus {
+    outline: 2px solid var(--accent);
+    border-color: var(--accent);
+}
+
+.project-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 1rem;
+}
+
+.project-actions .button {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.project-card-actions {
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+}
+
+.hide {
+    display: none !important;
+}
+
+.project-actions .experience-status {
+    margin-top: 0;
+}
+
+.project-delete-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 1rem;
+    border: 0;
+    background: transparent;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-delete-modal:popover-open {
+    display: flex;
+}
+
+.project-delete-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: rgba(28, 25, 23, 0.58);
+    cursor: default;
+}
+
+.project-delete-modal__content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 480px);
+    padding: 1.5rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
+}
+
+.project-delete-modal__content h2 {
+    margin: 0 0 0.75rem;
+    font-family:
+        "Space Grotesk",
+        -apple-system,
+        sans-serif;
+    font-size: 1.5rem;
+}
+
+.project-delete-modal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.project-delete-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.button-danger {
+    background: #b42318;
+}
+
+@media (max-width: 600px) {
+    .project-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .project-add-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .project-search {
+        flex-direction: column;
+    }
+
+    .project-search .button {
+        width: 100%;
+    }
+
+    .project-delete-modal {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .project-delete-modal__content {
+        width: 100%;
+        padding: 1.25rem;
+        border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .project-delete-modal__actions {
+        flex-direction: column-reverse;
+    }
+
+    .project-delete-modal__actions .button {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 @media (max-width: 520px) {
@@ -746,6 +830,69 @@ svg.ticket-plane {
         grid-template-columns: 1fr 1fr;
         gap: 1.2rem;
     }
+}
+
+/* ==========================================================================
+   PROJECT FORM
+   ========================================================================== */
+
+.project-form {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.7rem;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    font: inherit;
+    transition:
+        border-color 0.2s ease,
+        outline-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: 2px solid var(--accent);
+    border-color: var(--accent);
+}
+
+.form-error {
+    color: #b42318;
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+}
+
+.button {
+    display: inline-block;
+    height: fit-content;
+    border: 0;
+    border-radius: var(--radius);
+    padding: 0.65rem 1rem;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.button-secondary {
+    background: var(--ink);
 }
 
 /* ==========================================================================

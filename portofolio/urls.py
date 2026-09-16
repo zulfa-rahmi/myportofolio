@@ -21,3 +21,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("main.urls")),
 ]
+
+CSRF_TRUSTED_ORIGINS = ["<https://zulfa-rahmi-myportofolio.pws.cs.ui.ac.id/>"]
