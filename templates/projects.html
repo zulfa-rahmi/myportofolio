@@ -1,20 +1,14 @@
 {% extends "base.html" %}
-{% block meta %}
-    <title>Projects - {{ name }}</title>
-{% endblock meta %}
+{% block title %}Projects{% endblock %}
 {% block content %}
-    <main>
-        <section class="experience-section" id="experience">
-            <div class="container">
-                <p class="section-kicker">Karya yang saya bangun</p>
-                <div class="project-header">
-                    <h1>Projects</h1>
-                    <a href="{% url 'main:create_project' %}"
-                       class="button project-add-button">
-                        <span aria-hidden="true">+</span>
-                        Tambah Proyek
-                    </a>
-                </div>
+    <section class="page-hero">
+        <p class="page-kicker">Project yang pernah saya kerjakan</p>
+        <h1 class="script-title">Projects</h1>
+    </section>
+
+    <section class="projects-section" id="experience">
+        <div class="container">
+            <div class="project-toolbar">
                 <form method="get"
                       action="{% url 'main:show_projects' %}"
                       class="project-search">
@@ -26,35 +20,42 @@
                            aria-label="Cari berdasarkan nama proyek">
                     <button type="submit" class="button">Cari</button>
                 </form>
-                <div class="experience-grid project-grid">
-                    {% for project in project_list %}
-                        <article class="experience-card">
-                            {% if project.project_image_url %}
-                                <img src="{{ project.project_image_url }}"
-                                     alt="Gambar {{ project.title }}"
-                                     class="project-image">
-                            {% endif %}
-                            <h2>{{ project.title }}</h2>
-                            <span class="experience-category">{{ project.tech_stack }}</span>
-                            <p class="experience-description">{{ project.description }}</p>
-                            <div class="project-card-actions">
-                                <div class="project-actions">
-                                    {% if project.project_url %}
-                                        <a href="{{ project.project_url }}" class="button">Lihat Project</a>
-                                    {% endif %}
-                                    {% include "components/project_delete_modal.html" with project=project %}
-                                </div>
-                            </div>
-                        </article>
-                    {% empty %}
-                        {% if title_query %}
-                            <p class="empty-state">Tidak ada proyek dengan nama tersebut.</p>
-                        {% else %}
-                            <p class="empty-state">Belum ada proyek yang ditambahkan.</p>
-                        {% endif %}
-                    {% endfor %}
-                </div>
+                <a href="{% url 'main:create_project' %}"
+                   class="button project-add-button">
+                    <span aria-hidden="true">+</span>
+                    Tambah Proyek
+                </a>
             </div>
-        </section>
-    </main>
+            <div class="experience-grid project-grid">
+                {% for project in project_list %}
+                    <article class="experience-card">
+                        {% if project.cover_image %}
+                            <img src="{{ project.cover_image }}"
+                                 alt="Gambar {{ project.title }}"
+                                 class="project-image">
+                        {% endif %}
+                        <h2>{{ project.title }}</h2>
+                        <span class="experience-category">{{ project.event }}</span>
+                        <p class="experience-description">{{ project.description }}</p>
+                        <div class="project-card-actions">
+                            <div class="project-actions">
+                                {% if project.project_url %}
+                                    <a href="{{ project.project_url }}" class="button">Lihat Project</a>
+                                {% endif %}
+                                <a href="{% url 'main:update_project' project.id %}"
+                                   class="button button-secondary">Edit Proyek</a>
+                                {% include "components/project_delete_modal.html" with project=project %}
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    {% if title_query %}
+                        <p class="empty-state">Tidak ada proyek dengan nama tersebut.</p>
+                    {% else %}
+                        <p class="empty-state">Belum ada proyek yang ditambahkan.</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
 {% endblock content %}

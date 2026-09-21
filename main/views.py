@@ -76,6 +76,25 @@ def create_project(request):
     context = {
         "name": "Zulfa Rahmi Nasution",
         "form": form,
+        "is_edit": False,
+    }
+    return render(request, "projects_form.html", context)
+
+
+def update_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    form = ProjectForm(request.POST or None, instance=project)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Proyek berhasil diperbarui!")
+        return redirect("main:show_projects")
+
+    context = {
+        "name": "Zulfa Rahmi Nasution",
+        "form": form,
+        "project": project,
+        "is_edit": True,
     }
     return render(request, "projects_form.html", context)
 
