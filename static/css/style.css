@@ -1048,6 +1048,51 @@ svg.ticket-plane {
 }
 
 /* ==========================================================================
+   EXPERIENCE FORM & TICKET ACTION EXTENSIONS
+   ========================================================================== */
+
+/* 1. Styling khusus untuk input tipe Date (Tanggal Mulai & Tanggal Selesai) */
+.form-group input[type="date"] {
+    font-family: inherit;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+/* 2. Styling khusus untuk Checkbox (Masih Berlangsung) agar sejajar dengan label */
+.form-group-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.4rem;
+}
+
+.form-group-checkbox label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.form-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--button-pink);
+    cursor: pointer;
+}
+
+/* 3. Penyelarasan tombol Aksi (Edit & Delete) di dalam Karcis Experience */
+.ticket-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.ticket-actions .button {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.85rem;
+}
+
+/* ==========================================================================
    FOOTER
    ========================================================================== */
 .site-footer {

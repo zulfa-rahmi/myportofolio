@@ -1,12 +1,6 @@
-from django.shortcuts import render
-
-from main.models import Experience, Project
-
-from main.forms import ProjectForm
-from django.contrib import messages
-from django.core import serializers
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import render, redirect, get_object_or_404
+from main.models import Project, Experience
+from main.forms import ProjectForm, ExperienceForm
 
 def show_main(request):
     context = {
@@ -36,84 +30,103 @@ def show_main(request):
     }
     return render(request, "index.html", context)
 
-
-def show_experience(request):
-    context = {
-        "active_page": "experience",
-        "name": "Zulfa Rahmi Nasution",
-        "experience_list": Experience.objects.all(),
-    }
-    return render(request, "experience.html", context)
-
+# --- PROJECTS ---
 
 def show_projects(request):
-    json_response = get_projects_json(request)
-    projects = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    projects = [project.object for project in projects]
-
-    title_query = request.GET.get("title", "").strip()
-
+    title_query = request.GET.get('title', '')
+    if title_query:
+        projects = Project.objects.filter(title__icontains=title_query)
+    else:
+        projects = Project.objects.all()
+    
     context = {
-        "active_page": "projects",
-        "name": "Zulfa Rahmi Nasution",
-        "project_list": projects,
-        "title_query": title_query,
+        'project_list': projects,
+        'title_query': title_query,
     }
-
-    return render(request, "projects.html", context)
+    return render(request, 'projects.html', context)
 
 def create_project(request):
-    form = ProjectForm(request.POST or None)
-
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        messages.success(request, "Proyek baru berhasil ditambahkan!")
-        return redirect("main:show_projects")
-
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('main:show_projects')
+    else:
+        form = ProjectForm()
+    
     context = {
-        "name": "Zulfa Rahmi Nasution",
-        "form": form,
-        "is_edit": False,
+        'form': form,
+        'is_edit': False,
     }
-    return render(request, "projects_form.html", context)
+    return render(request, 'projects_form.html', context)
 
-
-def update_project(request, project_id):
-    project = get_object_or_404(Project, pk=project_id)
-    form = ProjectForm(request.POST or None, instance=project)
-
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        messages.success(request, "Proyek berhasil diperbarui!")
-        return redirect("main:show_projects")
-
+def update_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, instance=project)
+        if form.is_valid():
+            form.save()
+            return redirect('main:show_projects')
+    else:
+        form = ProjectForm(instance=project)
+    
     context = {
-        "name": "Zulfa Rahmi Nasution",
-        "form": form,
-        "project": project,
-        "is_edit": True,
+        'form': form,
+        'project': project,
+        'is_edit': True,
     }
-    return render(request, "projects_form.html", context)
+    return render(request, 'projects_form.html', context)
 
-def get_projects_json(request):
-    title_query = request.GET.get("title", "").strip()
-    projects = Project.objects.all()
-
-    if title_query:
-        projects = projects.filter(title__icontains=title_query)
-
-    projects_json = serializers.serialize("json", projects)
-    return HttpResponse(projects_json, content_type="application/json")
-
-def delete_project(request, project_id):
-    project = get_object_or_404(Project, pk=project_id)
-
-    if request.method == "POST":
+def delete_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+    if request.method == 'POST':
         project.delete()
-        messages.success(request, "Project berhasil dihapus!")
-        return redirect("main:show_projects")
+    return redirect('main:show_projects')
 
-    return redirect("main:show_projects")
+
+# --- EXPERIENCE ---
+
+def show_experience(request):
+    experience_list = Experience.objects.all().order_by('-started_at')
+    context = {
+        'experience_list': experience_list,
+    }
+    return render(request, 'experience.html', context)
+
+def create_experience(request):
+    if request.method == 'POST':
+        form = ExperienceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('main:show_experience')
+    else:
+        form = ExperienceForm()
+    
+    context = {
+        'form': form,
+        'is_edit': False,
+    }
+    return render(request, 'experience_form.html', context)
+
+def update_experience(request, id):
+    experience = get_object_or_404(Experience, pk=id)
+    if request.method == 'POST':
+        form = ExperienceForm(request.POST, instance=experience)
+        if form.is_valid():
+            form.save()
+            return redirect('main:show_experience')
+    else:
+        form = ExperienceForm(instance=experience)
+    
+    context = {
+        'form': form,
+        'experience': experience,
+        'is_edit': True,
+    }
+    return render(request, 'experience_form.html', context)
+
+def delete_experience(request, id):
+    experience = get_object_or_404(Experience, pk=id)
+    if request.method == 'POST':
+        experience.delete()
+    return redirect('main:show_experience')

@@ -19,8 +19,9 @@ class Experience(models.Model):
     description = models.TextField()
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
     thumbnail = models.URLField(blank=True, null=True)
-    started_at = models.DateTimeField(auto_now_add=True)
-    ended_at = models.DateTimeField(blank=True, null=True)
+    started_at = models.DateField()
+    ended_at = models.DateField(blank=True, null=True)
+    is_current = models.BooleanField(default=False)
     def __str__(self):
         return self.title
     
