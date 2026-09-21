@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Projects{% endblock %}
 {% block content %}
     <section class="page-hero">
-        <p class="page-kicker">Project yang pernah saya kerjakan</p>
+        <p class="page-kicker">Proyek yang pernah saya kerjakan</p>
         <h1 class="script-title">Projects</h1>
     </section>
 
@@ -30,9 +31,15 @@
                 {% for project in project_list %}
                     <article class="experience-card">
                         {% if project.cover_image %}
-                            <img src="{{ project.cover_image }}"
-                                 alt="Gambar {{ project.title }}"
-                                 class="project-image">
+                            {% if "http://" in project.cover_image or "https://" in project.cover_image %}
+                                <img src="{{ project.cover_image }}"
+                                    alt="Gambar {{ project.title }}"
+                                    class="project-image">
+                            {% else %}
+                                <img src="{% static 'img/projects/' %}{{ project.cover_image }}"
+                                    alt="Gambar {{ project.title }}"
+                                    class="project-image">
+                            {% endif %}
                         {% endif %}
                         <h2>{{ project.title }}</h2>
                         <span class="experience-category">{{ project.event }}</span>

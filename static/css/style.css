@@ -932,6 +932,122 @@ svg.ticket-plane {
 }
 
 /* ==========================================================================
+   DELETE MODAL STYLES
+   ========================================================================== */
+
+/* Container modal utama */
+.project-delete-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 1rem;
+    border: 0;
+    background: transparent;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Saat modal aktif/terbuka */
+.project-delete-modal:popover-open,
+.project-delete-modal[open] {
+    display: flex !important;
+}
+
+/* Latar belakang gelap (Backdrop) */
+.project-delete-modal__backdrop {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: rgba(28, 25, 23, 0.4);
+    backdrop-filter: blur(4px);
+    cursor: default;
+}
+
+/* Kotak dialog putih di tengah */
+.project-delete-modal__content {
+    position: relative;
+    z-index: 2;
+    width: min(90%, 420px);
+    padding: 2rem;
+    background: #FFFFFF;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--line);
+    text-align: left;
+    animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.project-delete-modal__content h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--ink);
+}
+
+.project-delete-modal__content p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+/* Tombol silang (X) untuk tutup */
+.project-delete-modal__close {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.project-delete-modal__close:hover {
+    background: #F3F4F6;
+    color: var(--ink);
+}
+
+.project-delete-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.project-delete-modal__actions form {
+    margin: 0;
+}
+
+/* ==========================================================================
    FOOTER
    ========================================================================== */
 .site-footer {
