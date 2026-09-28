@@ -67,3 +67,60 @@ DEKLARASI AI
 Dalam membuat website ini saya menggunakan AI gemini
 Karena ternyata sudah ada beberapa hal yang saya implementasikan di tugas individu sebelumnya jadi untuk tugas saat ini saya hanya tinggal membuat form dan merapikan tampilan web lewat css. Untuk pembuatan formnya saya menggunakan AI untuk mempelajari beberapa sintaks. Sedangkan untuk proses merapikan tampilannya saya dibantu oleh AI untuk memvisualisasikan keinginan saya.
 chat dengan gemini: https://gemini.google.com/share/d/1QAPC16-DN3RL5emaazy5XCcZYWViUq6P?usp=sharing
+
+### TUGAS 4
+## Personal Portfolio & Experience Management System
+Proyek ini dikembangkan sebagai bagian dari tugas perkuliahan Pemrograman Berbasis Platform (PBP), yang bertujuan untuk mencatat projects dan experiences secara terstruktur serta dinamis.
+
+# Deskripsi Proyek:
+Aplikasi ini merupakan platform portofolio pribadi berbasis web yang dirancang untuk menampilkan rekam jejak proyek dan pengalaman secara interaktif. Pada Tugas 4, fokus utama pengembangannya adalah Implementasi Autentikasi, Session, dan Cookie, meliputi:
+- Autentikasi Pengguna: Sistem pendaftaran akun (Register), masuk (Login), dan keluar (Logout).
+- Pengelolaan Cookie & Session: Menyimpan status sesi pengguna dan informasi login terkahir (last login) untuk meningkatkan fungsionalisasi dan keamanan aplikasi.
+- Restriksi Akses: Mengamankan halaman-halaman utama agar hanya dapat diakses oleh pengguna yang sudah terautentikasi.
+
+# Panduan Setup & Cara Menjalankan Proyek:
+Berikut adalah langkah-langkah untuk menjalankan proyek ini secara lokal di komputer Anda:
+
+1. Prasyarat
+Pastikan Anda sudah menginstal:
+Python 3.10+
+Git
+
+2. Clone Repository
+Buka terminal/command prompt, lalu jalankan perintah:
+git clone https://github.com/zulfa-rahmi/myportofolio.git
+cd myportofolio
+
+3. Membuat & Mengaktifkan Virtual Environment
+Sangat disarankan untuk menggunakan virtual environment agar pustaka yang diinstal tidak mengganggu sistem utama.
+Windows:
+python -m venv env
+env\Scripts\activate
+
+macOS / Linux:
+python3 -m venv env
+source env/bin/activate
+
+4. Install Dependencies
+Instal seluruh paket/library yang dibutuhkan proyek dengan menjalankan:
+pip install -r requirements.txt
+
+5. Migrasi Database
+Jalankan skrip migrasi untuk menyiapkan struktur tabel/database aplikasi:
+python manage.py makemigrations
+python manage.py migrate
+
+6. Menjalankan Server Lokal
+Setelah skema database siap, jalankan development server:
+python manage.py runserver
+
+Akses aplikasi melalui browser di alamat: http://localhost:8000/ atau http://127.0.0.1:8000/.
+
+# Deklarasi Penggunaan AI
+Dalam proses penyelesaian proyek ini, saya menggunakan bantuan Google Gemini AI dengan rincian porsi sebagai berikut:
+- Secara keseluruhan, proses pembuatan fitur utama seperti Login, Register, dan Logout (Autentikasi) lebih banyak mengandalkan materi yang tersedia pada website materi PBP, karena alurnya yang terstruktur dan mudah diikuti.
+- Desain & Styling (CSS): Gemini AI digunakan untuk membantu merapikan tampilan antarmuka (CSS) yang sebelumnya masih kurang tertata.
+- Debugging: AI dimanfaatkan untuk menelusuri pesan kesalahan (error logs) serta memperbaiki isu-isu minor pada kode.
+- Fitur Tambahan (Editor): Saat pengerjaan Tugas 4, AI digunakan sebagai rujukan diskusi dan klarifikasi konsep mengenai cara menambahkan komponen editor yang awalnya memicu kebingungan.
+- Pengujian (Test Case): Pembuatan unit test / test case dibantu oleh AI untuk memastikan skenario pengujian autentikasi dan fungsionalitas aplikasi dapat berjalan secara komprehensif.
+Chat dengan gemini : https://gemini.google.com/share/d/1cCUDMaZERb6-xp_ZrBd-20uGyqD-OUo1?usp=sharing

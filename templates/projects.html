@@ -21,7 +21,7 @@
                            aria-label="Cari berdasarkan nama proyek">
                     <button type="submit" class="button">Cari</button>
                 </form>
-                {% if user.is_superuser %} 
+                {% if user.is_superuser or is_editor %} 
                 <a href="{% url 'main:create_project' %}"
                    class="button project-add-button">
                     <span aria-hidden="true">+</span>
@@ -51,10 +51,10 @@
                                 {% if project.project_url %}
                                     <a href="{{ project.project_url }}" class="button">Lihat Project</a>
                                 {% endif %}
+                                {% include "components/project_star.html" with project=project %}
+                                {% if user.is_superuser or is_editor %}
                                 <a href="{% url 'main:update_project' project.id %}"
                                    class="button button-secondary">Edit Proyek</a>
-                                {% include "components/project_star.html" with project=project %}
-                                {% if user.is_superuser %} 
                                     {% include "components/project_delete_modal.html" with project=project %}
                                 {% endif %}  
                             </div>

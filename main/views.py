@@ -53,16 +53,17 @@ def show_projects(request):
   projects = [project.object for project in projects_deserialized]
 
   context = {
+      "active_page": "projects",
       'name': 'Zulfa Rahmi Nasution',
       'project_list': projects,
       'title_query': title_query,
   }
-  return render(request, 'project.html', context)
+  return render(request, 'projects.html', context)
 
 @login_required(login_url="/login/")
 def create_project(request):
 
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
         raise PermissionDenied
 
     if request.method == 'POST':
@@ -79,7 +80,12 @@ def create_project(request):
     }
     return render(request, 'projects_form.html', context)
 
+@login_required(login_url="/login/")
 def update_project(request, id):
+
+    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
+        raise PermissionDenied
+
     project = get_object_or_404(Project, pk=id)
     if request.method == 'POST':
         form = ProjectForm(request.POST, instance=project)
@@ -99,7 +105,7 @@ def update_project(request, id):
 @login_required(login_url="/login/")
 def delete_project(request, id):
 
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
         raise PermissionDenied
     
     project = get_object_or_404(Project, pk=id)
@@ -130,6 +136,7 @@ def show_experience(request):
   experience_list = [exp.object for exp in experiences_deserialized]
 
   context = {
+      "active_page": "experience",
       'experience_list': experience_list,
       'title_query': title_query,
   }
@@ -138,7 +145,7 @@ def show_experience(request):
 @login_required(login_url="/login/")
 def create_experience(request):
     
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
         raise PermissionDenied
 
     if request.method == 'POST':
@@ -155,7 +162,12 @@ def create_experience(request):
     }
     return render(request, 'experience_form.html', context)
 
+@login_required(login_url="/login/")
 def update_experience(request, id):
+
+    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
+        raise PermissionDenied
+    
     experience = get_object_or_404(Experience, pk=id)
     if request.method == 'POST':
         form = ExperienceForm(request.POST, instance=experience)
@@ -175,7 +187,7 @@ def update_experience(request, id):
 @login_required(login_url="/login/")
 def delete_experience(request, id):
 
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
         raise PermissionDenied
 
     experience = get_object_or_404(Experience, pk=id)
@@ -204,6 +216,7 @@ def register(request):
         return redirect("main:login")
 
     context = {
+        "active_page": "register",
         "name": "Zulfa Rahmi Nasution",
         "form": form,
     }
@@ -220,6 +233,7 @@ def login_user(request):
         return response
 
     context = {
+        "active_page": "login",
         "name": "Zulfa Rahmi Nasution",
         "form": form,
     }
