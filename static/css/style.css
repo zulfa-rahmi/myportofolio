@@ -68,6 +68,105 @@ body {
 }
 
 /* ==========================================================================
+   BASE / TYPOGRAPHY DEFAULTS
+   ========================================================================== */
+
+/* Heading standar */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--ink);
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 0.75rem;
+}
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.35rem; }
+h4 { font-size: 1.1rem; }
+
+/* Paragraf & Text */
+p {
+    margin-bottom: 1rem;
+    color: var(--ink);
+    line-height: 1.6;
+}
+
+p:last-child {
+    margin-bottom: 0;
+}
+
+/* Link Standar */
+a {
+    color: var(--button-pink);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 0.8;
+}
+
+/* Form Elements Standar (Input, Select, Textarea) */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font: inherit;
+    font-size: 0.95rem;
+    color: var(--ink);
+    background-color: #FAFAFA;
+    transition: all 0.2s ease;
+    margin-bottom: 1rem;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--button-pink);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(231, 102, 140, 0.18);
+}
+
+/* Button Standar (Jika lupa kasih class .button) */
+button {
+    font: inherit;
+    cursor: pointer;
+}
+
+/* List Standar */
+ul, ol {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+li {
+    margin-bottom: 0.25rem;
+}
+
+/* Gambar Responsif Standar */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Container umum untuk halaman baru */
+.page-content {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem 5%;
+    background: #FFFFFF;
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft);
+}
+
+/* ==========================================================================
    NAVIGATION BAR
    ========================================================================== */
 .site-header {
@@ -147,6 +246,73 @@ body {
 .nav-toggle-checkbox,
 .nav-toggle {
     display: none !important;
+}
+
+/* ==========================================================================
+   NAVBAR PILLS (USER, LOGOUT, LOGIN, REGISTER)
+   ========================================================================== */
+
+/* User Pill (Sudah Login) */
+.user-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.75);
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid rgba(28, 25, 23, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    backdrop-filter: blur(4px);
+}
+
+.user-pill__name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ink, #1C1917);
+}
+
+.user-pill__logout {
+    background-color: #FEE2E2;
+    color: #DC2626 !important;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.user-pill__logout:hover {
+    background-color: #DC2626;
+    color: #FFFFFF !important;
+}
+
+.auth-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 85px;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(28, 25, 23, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ink, #1C1917);
+    text-decoration: none !important;
+    text-align: center;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+}
+
+.auth-pill:hover,
+.auth-pill.is-active {
+    background-color: #FFFFFF;
+    color: var(--button-pink, #E7668C);
+    border-color: var(--button-pink, #E7668C);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(231, 102, 140, 0.2);
 }
 
 @media (max-width: 850px) {
@@ -287,6 +453,28 @@ body {
         max-width: 280px;
         transform: rotate(4deg);
     }
+}
+
+.meta-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-top: 1.2rem;
+}
+
+.meta-row dt {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted, #6B7280);
+}
+
+.meta-row dd {
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--ink, #1C1917);
 }
 
 /* ==========================================================================
@@ -524,7 +712,7 @@ body {
 }
 
 /* ==========================================================================
-   PERBAIKAN TIKET & POSISI PESAWAT (LENGKAP)
+   PERBAIKAN TIKET & POSISI PESAWAT
    ========================================================================== */
 .ticket-body {
     display: flex;
@@ -532,6 +720,7 @@ body {
     padding: 20px 15px 25px;
     position: relative;
 }
+
 
 .ticket-barcode {
     flex-shrink: 0;
@@ -1090,6 +1279,151 @@ svg.ticket-plane {
 .ticket-actions .button {
     font-size: 0.8rem;
     padding: 0.4rem 0.85rem;
+}
+
+/* ==========================================================================
+   AUTH PAGES (LOGIN & REGISTER)
+   ========================================================================== */
+
+/* Halaman Utama Login/Register (Layout Tengah) */
+.auth-page {
+    min-height: calc(100vh - 140px); /* Memastikan halaman cukup tinggi dari navbar ke footer */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+}
+
+/* Kartu Pembungkus Form (Auth Card) */
+.auth-card {
+    background: #FFFFFF;
+    width: 100%;
+    max-width: 440px; /* Batas lebar form agar tidak terlalu lebar */
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
+    border: 1px solid rgba(28, 25, 23, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.auth-card h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--ink, #1C1917);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Form Group & Input Styling */
+.auth-card .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+}
+
+.auth-card label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--ink, #1C1917);
+}
+
+.auth-card input[type="text"],
+.auth-card input[type="password"],
+.auth-card input[type="email"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: 1.5px solid rgba(28, 25, 23, 0.15);
+    background-color: #F8FAFC;
+    font-size: 0.95rem;
+    color: var(--ink, #1C1917);
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.auth-card input:focus {
+    outline: none;
+    border-color: var(--button-pink, #E7668C);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(231, 102, 140, 0.15);
+}
+
+/* Tombol Submit */
+.auth-card .button-submit {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 0.5rem;
+    border-radius: 999px;
+    background-color: var(--button-pink, #E7668C);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(231, 102, 140, 0.3);
+}
+
+.auth-card .button-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(231, 102, 140, 0.4);
+}
+
+/* Teks Bawah & Link Switch */
+.auth-switch {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.88rem;
+    color: var(--muted, #6B7280);
+}
+
+.auth-switch a {
+    color: var(--button-pink, #E7668C);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+/* Error Message & Help Text */
+.form-error {
+    color: #DC2626;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 0.25rem;
+}
+
+.form-help {
+    font-size: 0.78rem;
+    color: var(--muted, #6B7280);
+    margin-top: 0.2rem;
+}
+
+/* ==========================================================================
+   TOMBOL STAR
+   ========================================================================== */
+.star-form {
+    display: inline;
+}
+
+.button-star {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--ink);
+}
+
+.button-star.is-starred {
+    background: var(--accent);
+}
+
+.star-count {
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+    font-size: 0.8rem;
 }
 
 /* ==========================================================================
