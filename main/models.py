@@ -1,4 +1,5 @@
 import uuid
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
@@ -43,9 +44,12 @@ class Project(models.Model):
     project_url = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    starred_by = models.ManyToManyField(
+        User, related_name="starred_projects", blank=True
+    )
+
     class Meta:
         ordering = ['-year', 'title']
 
     def __str__(self):
         return self.title
-
