@@ -9,6 +9,18 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core import serializers
 from django.http import HttpResponse
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.utils.html import strip_tags
+from django.views.decorators.csrf import csrf_exempt
+
+
+def can_manage(user):
+    """True kalau user adalah superuser atau anggota group 'Editor'."""
+    return user.is_authenticated and (
+        user.is_superuser or user.groups.filter(name='Editor').exists()
+    )
+
 
 def show_main(request):
     last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
@@ -43,27 +55,21 @@ def show_main(request):
 # --- PROJECTS ---
 
 def show_projects(request):
-  title_query = request.GET.get('title', '').strip()
-  json_response = get_projects_json(request)
+    title_query = request.GET.get("title", "").strip()
 
-  projects_deserialized = serializers.deserialize(
-      'json',
-      json_response.content.decode('utf-8'),
-  )
-  projects = [project.object for project in projects_deserialized]
-
-  context = {
-      "active_page": "projects",
-      'name': 'Zulfa Rahmi Nasution',
-      'project_list': projects,
-      'title_query': title_query,
-  }
-  return render(request, 'projects.html', context)
+    context = {
+        'active_page': 'projects',
+        'name': 'Zulfa Rahmi Nasution',
+        'title_query': title_query,
+        'can_manage': can_manage(request.user),   # dipakai projects.html
+        "form": ProjectForm(),
+    }
+    return render(request, "projects.html", context)
 
 @login_required(login_url="/login/")
 def create_project(request):
 
-    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
+    if not can_manage(request.user):
         raise PermissionDenied
 
     if request.method == 'POST':
@@ -83,7 +89,7 @@ def create_project(request):
 @login_required(login_url="/login/")
 def update_project(request, id):
 
-    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
+    if not can_manage(request.user):
         raise PermissionDenied
 
     project = get_object_or_404(Project, pk=id)
@@ -105,7 +111,7 @@ def update_project(request, id):
 @login_required(login_url="/login/")
 def delete_project(request, id):
 
-    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
+    if not can_manage(request.user):
         raise PermissionDenied
     
     project = get_object_or_404(Project, pk=id)
@@ -115,13 +121,59 @@ def delete_project(request, id):
 
 def get_projects_json(request):
     title_query = request.GET.get("title", "").strip()
-    projects = Project.objects.all()
+    projects = Project.objects.prefetch_related('starred_by').all()
 
     if title_query:
         projects = projects.filter(title__icontains=title_query)
 
-    projects_json = serializers.serialize("json", projects, use_natural_foreign_keys=True)
-    return HttpResponse(projects_json, content_type="application/json")
+    data = []
+    for project in projects:
+        starred_users = list(project.starred_by.all())
+        is_starred = request.user.is_authenticated and request.user in starred_users
+        starred_by_names = [user.username for user in starred_users]
+
+        data.append({
+            "pk": str(project.id),
+            "fields": {
+                "title": project.title,
+                "event": project.event,
+                "description": project.description,
+                "year": project.year,
+                "cover_image": project.cover_image,
+                "project_url": project.project_url,
+                "created_at": project.created_at.isoformat(),
+                "star_count": len(starred_users),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
+
+@csrf_exempt
+@require_POST
+def create_project_ajax(request):
+    title = strip_tags(request.POST.get("title"))        # Membersihkan tag HTML dari title
+    event = strip_tags(request.POST.get("event"))        # Membersihkan tag HTML dari event
+    description = strip_tags(request.POST.get("description"))  # Membersihkan tag HTML dari description
+    year = request.POST.get("year")
+    cover_image = request.POST.get("cover_image")
+    project_url = request.POST.get("project_url")
+
+    user = request.user
+
+    new_project = Project(
+        title=title,
+        event=event,
+        description=description,
+        year=year,
+        cover_image=cover_image,
+        project_url=project_url,
+        user=user
+    )
+    new_project.save()
+
+    return HttpResponse(b"CREATED", status=201)
 
 # --- EXPERIENCE ---
 
@@ -145,7 +197,7 @@ def show_experience(request):
 @login_required(login_url="/login/")
 def create_experience(request):
     
-    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
+    if not can_manage(request.user):
         raise PermissionDenied
 
     if request.method == 'POST':
@@ -165,7 +217,7 @@ def create_experience(request):
 @login_required(login_url="/login/")
 def update_experience(request, id):
 
-    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
+    if not can_manage(request.user):
         raise PermissionDenied
     
     experience = get_object_or_404(Experience, pk=id)
@@ -187,7 +239,7 @@ def update_experience(request, id):
 @login_required(login_url="/login/")
 def delete_experience(request, id):
 
-    if not (request.user.is_superuser or request.user.groups.filter(name='Editor').exists()):
+    if not can_manage(request.user):
         raise PermissionDenied
 
     experience = get_object_or_404(Experience, pk=id)

@@ -15,6 +15,7 @@ from main.views import (
     login_user,
     logout_user,
     toggle_star,
+    create_project_ajax
 )
 
 app_name = "main"
@@ -29,6 +30,7 @@ urlpatterns = [
     path("projects/<uuid:id>/edit/", update_project, name="update_project"),
     path("projects/<uuid:id>/delete/", delete_project, name="delete_project"),
     path("api/projects/", get_projects_json, name="get_projects_json"),
+    path("projects/add-ajax/", create_project_ajax, name="create_project_ajax"),
 
     # Experience
     path("experience/", show_experience, name="show_experience"),
