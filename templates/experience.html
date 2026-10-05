@@ -11,56 +11,55 @@
 
 <section class="tickets-section">
     <div class="container">
-        <div class="project-toolbar" style="justify-content: flex-end;">
-            {% if user.is_superuser or is_editor %} 
-            <a href="{% url 'main:create_experience' %}" class="button project-add-button">
+        <div class="project-toolbar">
+            <form id="experience-search-form" class="project-search">
+                <input type="search"
+                       id="search-input"
+                       name="q"
+                       value="{{ title_query }}"
+                       placeholder="Cari posisi atau organisasi"
+                       class="project-search__input"
+                       aria-label="Cari pengalaman berdasarkan posisi atau organisasi">
+                <button type="submit" class="button">Cari</button>
+            </form>
+
+            {% if can_manage %}
+            <button type="button"
+                    class="button project-add-button"
+                    popovertarget="add-experience-modal">
                 <span aria-hidden="true">+</span>
                 Tambah Pengalaman
-            </a>
-            {% endif %}  
+            </button>
+            {% endif %}
         </div>
 
-        <div class="tickets-grid">
-            {% for experience in experience_list %}
-                <article class="ticket ticket-{% cycle 'coral' 'teal' as ticket_color %} tilt-{% cycle 'left' 'right' as ticket_tilt %}">
-                    <div class="ticket-header">
-                        <span>{{ experience.get_category_display }}</span>
-                    </div>
-                    <div class="ticket-body">
-                        <div class="ticket-barcode" aria-hidden="true">
-                            <span>{{ experience.started_at|date:"ymd" }}{{ forloop.counter }}</span>
-                        </div>
-                        <div class="ticket-info">
-                            <h2 class="ticket-role">{{ experience.title }}</h2>
-                            {% if experience.organization %}
-                                <p class="ticket-org">{{ experience.organization }}</p>
-                            {% endif %}
-                            <p class="ticket-desc">{{ experience.description }}</p>
-                            <p class="ticket-period">
-                                {{ experience.started_at|date:"M Y" }} –
-                                {% if experience.is_current %}
-                                    <span class="status-ongoing">Ongoing</span>
-                                {% else %}
-                                    {{ experience.ended_at|date:"M Y" }}
-                                {% endif %}
-                            </p>
-
-                            <div class="ticket-actions">
-                                {% if user.is_superuser or is_editor %}
-                                <a href="{% url 'main:update_experience' experience.id %}" class="button button-secondary">Edit</a>
-                                    {% include "components/experience_delete_modal.html" with experience=experience %}
-                                {% endif %} 
-                            </div>
-                        </div>
-                        <svg class="ticket-plane" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
-                        </svg>
-                    </div>
-                </article>
-            {% empty %}
-                <p class="empty-state">Belum ada pengalaman yang ditambahkan.</p>
-            {% endfor %}
+        <div id="loading" class="hide"><p class="empty-state">Memuat pengalaman...</p></div>
+        <div id="error" class="hide">
+            <p class="empty-state">Gagal memuat pengalaman. Coba lagi nanti.</p>
+            <button type="button" id="retry-button" class="button button-secondary">Coba Lagi</button>
         </div>
+        <div id="empty" class="hide"><p class="empty-state" id="empty-text">Belum ada pengalaman yang ditambahkan.</p></div>
+        <div id="grid" class="tickets-grid hide"></div>
     </div>
 </section>
+
+{% if can_manage %}
+    {% include "components/experience_form_modal.html" %}
+    {% include "components/experience_delete_modal.html" %}
+{% endif %}
+
+<script>
+    // Konfigurasi untuk static/js/experience.js (URL & hak akses dari Django)
+    window.EXPERIENCE_CONFIG = {
+        listUrl: "{% url 'main:get_experience_json' %}",
+        createUrl: "{% url 'main:create_experience_ajax' %}",
+        editUrlTemplate: "{% url 'main:update_experience' '00000000-0000-0000-0000-000000000000' %}",
+        deleteUrlTemplate: "{% url 'main:delete_experience' '00000000-0000-0000-0000-000000000000' %}",
+        starUrlTemplate: "{% url 'main:toggle_star_experience' '00000000-0000-0000-0000-000000000000' %}",
+        canManage: "{{ can_manage|yesno:'true,false' }}" === "true",
+        isAuthenticated: "{{ user.is_authenticated|yesno:'true,false' }}" === "true",
+    };
+</script>
+<script src="{% static 'js/utils.js' %}"></script>
+<script src="{% static 'js/experience.js' %}"></script>
 {% endblock %}

@@ -1,27 +1,16 @@
-<button type="button"
-        class="button button-danger"
-        onclick="document.getElementById('delete-modal-{{ experience.id }}').showModal()">
-    Hapus
-</button>
-
-<dialog id="delete-modal-{{ experience.id }}" class="project-delete-modal">
-    <div class="project-delete-modal__backdrop" onclick="document.getElementById('delete-modal-{{ experience.id }}').close()"></div>
+{# Satu dialog konfirmasi yang dipakai bersama semua kartu; diisi oleh experience.js #}
+<dialog id="delete-experience-modal" class="project-delete-modal">
+    <div class="project-delete-modal__backdrop" data-close-delete></div>
     <div class="project-delete-modal__content">
-        <button type="button" 
-                class="project-delete-modal__close" 
-                onclick="document.getElementById('delete-modal-{{ experience.id }}').close()"
-                aria-label="Tutup">
-            &times;
-        </button>
+        <button type="button"
+                class="project-delete-modal__close"
+                data-close-delete
+                aria-label="Tutup">&times;</button>
         <h2>Hapus Pengalaman</h2>
-        <p>Apakah Anda yakin ingin menghapus pengalaman <strong>"{{ experience.title }}"</strong>? Tindakan ini tidak dapat dibatalkan.</p>
+        <p>Apakah Anda yakin ingin menghapus pengalaman <strong>"<span id="delete-experience-title"></span>"</strong>? Tindakan ini tidak dapat dibatalkan.</p>
         <div class="project-delete-modal__actions">
-            <button type="button" 
-                    class="button button-secondary" 
-                    onclick="document.getElementById('delete-modal-{{ experience.id }}').close()">
-                Batal
-            </button>
-            <form method="post" action="{% url 'main:delete_experience' experience.id %}">
+            <button type="button" class="button button-secondary" data-close-delete>Batal</button>
+            <form id="delete-experience-form" method="post" action="">
                 {% csrf_token %}
                 <button type="submit" class="button button-danger">Ya, Hapus</button>
             </form>

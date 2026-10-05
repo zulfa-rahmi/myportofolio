@@ -12,6 +12,8 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.utils.html import strip_tags
+from django.utils import dateformat
+from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -178,21 +180,16 @@ def create_project_ajax(request):
 # --- EXPERIENCE ---
 
 def show_experience(request):
-  title_query = request.GET.get('title', '').strip()
-  json_response = get_experience_json(request)
-
-  experiences_deserialized = serializers.deserialize(
-      'json',
-      json_response.content.decode('utf-8'),
-  )
-  experience_list = [exp.object for exp in experiences_deserialized]
-
-  context = {
-      "active_page": "experience",
-      'experience_list': experience_list,
-      'title_query': title_query,
-  }
-  return render(request, 'experience.html', context)
+    """Hanya merender kerangka halaman; datanya dimuat lewat fetch()
+    ke get_experience_json."""
+    context = {
+        "active_page": "experience",
+        "name": "Zulfa Rahmi Nasution",
+        "title_query": request.GET.get("q", "").strip(),
+        "can_manage": can_manage(request.user),
+        "form": ExperienceForm(),
+    }
+    return render(request, "experience.html", context)
 
 @login_required(login_url="/login/")
 def create_experience(request):
@@ -247,15 +244,100 @@ def delete_experience(request, id):
         experience.delete()
     return redirect('main:show_experience')
 
+def serialize_experience(experience, user):
+    """Ubah satu Experience jadi dict JSON (format pk/fields, sama seperti projects)."""
+    starred_users = list(experience.starred_by.all())
+    return {
+        "pk": str(experience.id),
+        "fields": {
+            "title": experience.title,
+            "organization": experience.organization,
+            "description": experience.description,
+            "category": experience.category,
+            "category_display": experience.get_category_display(),
+            "started_at": experience.started_at.isoformat() if experience.started_at else None,
+            "ended_at": experience.ended_at.isoformat() if experience.ended_at else None,
+            "started_label": (
+                dateformat.format(experience.started_at, "M Y")
+                if experience.started_at else ""
+            ),
+            "ended_label": (
+                dateformat.format(experience.ended_at, "M Y")
+                if experience.ended_at else None
+            ),
+            "is_current": experience.is_current,
+            # info star dari Tugas 4
+            "star_count": len(starred_users),
+            "is_starred": user.is_authenticated and user in starred_users,
+            "starred_by_names": [u.username for u in starred_users],
+        },
+    }
+
+
 def get_experience_json(request):
-  title_query = request.GET.get('title', '').strip()
-  experiences = Experience.objects.all().order_by('-started_at')
+    """Endpoint publik (read-only) untuk daftar pengalaman.
+    Parameter ?q= mencari di field title ATAU organization."""
+    query = request.GET.get("q", "").strip()
+    experiences = (
+        Experience.objects.prefetch_related("starred_by").order_by("-started_at")
+    )
+    if query:
+        experiences = experiences.filter(
+            Q(title__icontains=query) | Q(organization__icontains=query)
+        )
 
-  if title_query:
-    experiences = experiences.filter(title__icontains=title_query)
+    data = [serialize_experience(exp, request.user) for exp in experiences]
+    return JsonResponse(data, safe=False)
 
-  experience_json = serializers.serialize('json', experiences, use_natural_foreign_keys=True)
-  return HttpResponse(experience_json, content_type='application/json')
+
+@require_POST
+def create_experience_ajax(request):
+    """Tambah pengalaman lewat AJAX.
+    201 = berhasil, 400 = validasi gagal, 403 = tidak punya hak akses.
+    CSRF TIDAK di-exempt: token dikirim lewat csrfmiddlewaretoken / X-CSRFToken."""
+    # Cek hak akses di server, bukan hanya menyembunyikan tombol di template
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"message": "Silakan login terlebih dahulu."}, status=403
+        )
+    if not can_manage(request.user):
+        return JsonResponse(
+            {"message": "Anda tidak memiliki izin untuk menambah pengalaman."},
+            status=403,
+        )
+
+    form = ExperienceForm(request.POST)
+    if not form.is_valid():
+        return JsonResponse(
+            {"message": "Data tidak valid.", "errors": form.errors.get_json_data()},
+            status=400,
+        )
+
+    experience = form.save()
+    return JsonResponse(
+        {
+            "message": "Pengalaman berhasil ditambahkan.",
+            "data": serialize_experience(experience, request.user),
+        },
+        status=201,
+    )
+
+
+@require_POST
+def toggle_star_experience(request, experience_id):
+    """Star / unstar pengalaman lewat AJAX. Harus login (403 kalau belum)."""
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"message": "Silakan login untuk memberi star."}, status=403
+        )
+
+    experience = get_object_or_404(Experience, pk=experience_id)
+    if experience.starred_by.filter(pk=request.user.pk).exists():
+        experience.starred_by.remove(request.user)
+    else:
+        experience.starred_by.add(request.user)
+
+    return JsonResponse(serialize_experience(experience, request.user))
 
 # --- LOGIN/LOGOUT FOR USER ---
 
