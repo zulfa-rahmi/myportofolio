@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.forms import (
     ModelForm,
     TextInput,
@@ -7,6 +8,7 @@ from django.forms import (
     NumberInput,
     URLInput,
 )
+from django.utils.html import strip_tags
 from main.models import Project, Experience
 
 
@@ -124,3 +126,33 @@ class ExperienceForm(ModelForm):
             ),
             "is_current": CheckboxInput(),
         }
+
+    # ---- Sanitasi XSS di sisi server ----
+    def _clean_text(self, field_name):
+        """Buang tag HTML dari field teks. Kalau hasilnya kosong
+        (mis. input hanya berisi <img onerror=...>), input ditolak."""
+        value = strip_tags(self.cleaned_data.get(field_name, "")).strip()
+        if not value:
+            raise ValidationError(
+                "Isian ini tidak boleh kosong atau hanya berisi tag HTML."
+            )
+        return value
+
+    def clean_title(self):
+        return self._clean_text("title")
+
+    def clean_organization(self):
+        return self._clean_text("organization")
+
+    def clean_description(self):
+        return self._clean_text("description")
+
+    def clean(self):
+        cleaned = super().clean()
+        started_at = cleaned.get("started_at")
+        ended_at = cleaned.get("ended_at")
+        if started_at and ended_at and ended_at < started_at:
+            self.add_error(
+                "ended_at", "Tanggal selesai tidak boleh sebelum tanggal mulai."
+            )
+        return cleaned

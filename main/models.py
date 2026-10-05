@@ -23,6 +23,10 @@ class Experience(models.Model):
     started_at = models.DateField()
     ended_at = models.DateField(blank=True, null=True)
     is_current = models.BooleanField(default=False)
+    starred_by = models.ManyToManyField(
+        User, related_name="starred_experiences", blank=True
+    )
+
     def __str__(self):
         return self.title
     
