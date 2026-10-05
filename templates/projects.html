@@ -2,17 +2,12 @@
 {% load static %}
 {% block title %}Projects{% endblock %}
 {% block content %}
-    <style>
-        /* Kelas buat nyembunyiin elemen (dipake JS). Boleh dipindah ke style.css */
-        .hide { display: none !important; }
-    </style>
-
     <section class="page-hero">
         <p class="page-kicker">Proyek yang pernah saya kerjakan</p>
         <h1 class="script-title">Projects</h1>
     </section>
 
-    <section class="projects-section" id="experience">
+    <section class="projects-section" id="projects">
         <div class="container">
             <div class="project-toolbar">
                 <form id="project-search-form" class="project-search">
@@ -47,11 +42,12 @@
         {% include "components/project_form_modal.html" %}
     {% endif %}
 
+    <script src="{% static 'js/utils.js' %}"></script>
     <script>
     // ================= KONFIGURASI =================
     const PROJECTS_ENDPOINT = "{% url 'main:get_projects_json' %}";
     const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}";
-    const CAN_MANAGE = "{{ can_manage|yesno:'true,false' }}";   // superuser atau editor
+    const CAN_MANAGE = "{{ can_manage|yesno:'true,false' }}" === "true";   // superuser atau editor
     const STATIC_PROJECT_IMG = "{% static 'img/projects/' %}";
     const DUMMY_ID = "00000000-0000-0000-0000-000000000000";
 
@@ -78,21 +74,7 @@
     const projectForm  = document.getElementById('project-form'); // null kalau bukan superuser/editor
 
     // ================= FUNGSI BANTUAN =================
-    // Biar teks dari database aman ditempel ke HTML
-    function escapeHtml(value) {
-        const div = document.createElement('div');
-        div.textContent = value ?? '';
-        return div.innerHTML;
-    }
-
-    // Aman dipanggil walau showToast belum ada
-    function notify(title, message, type) {
-        if (typeof showToast === 'function') {
-            showToast(title, message, type);
-        } else {
-            alert(title + ': ' + message);
-        }
-    }
+    // escapeHtml, getCookie, notify ada di static/js/utils.js
 
     // Tampilkan SATU bagian saja (loading / error / kosong / daftar project)
     function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
@@ -227,21 +209,6 @@
     });
 
     // ================= TAMBAH PROJECT (AJAX) =================
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
     function closeProjectModal() {
         const modal = document.getElementById('add-project-modal');
         if (modal) modal.hidePopover();
@@ -282,40 +249,6 @@
 
     if (projectForm) {
         projectForm.addEventListener('submit', addProject);
-    }
-
-    async function refreshProjects() {
-    // ... pengambilan data via fetch ...
-    
-    let htmlString = "";
-    projects.forEach((item) => {
-            // Bungkus semua atribut teks dari JSON dengan DOMPurify()
-            const title = DOMPurify(item.fields.title);
-            const event = DOMPurify(item.fields.event);
-            const description = DOMPurify(item.fields.description);
-            
-            htmlString += `
-                <article class="experience-card">
-                    <h2>${title}</h2>
-                    <span class="experience-category">${event}</span>
-                    <p class="experience-description">${description}</p>
-                    <!-- sisa atribut elemen kartu lainnya -->
-                </article>
-            `;
-        });
-        
-        document.getElementById("project_cards").innerHTML = htmlString;
-    }
-    
-    // Fungsi sanitasi sederhana berbasis JS sesuai kaidah tutorial
-    function DOMPurify(str) {
-        if (!str) return '';
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
     }
 
     // ================= MULAI =================

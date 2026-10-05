@@ -124,3 +124,33 @@ Dalam proses penyelesaian proyek ini, saya menggunakan bantuan Google Gemini AI 
 - Fitur Tambahan (Editor): Saat pengerjaan Tugas 4, AI digunakan sebagai rujukan diskusi dan klarifikasi konsep mengenai cara menambahkan komponen editor yang awalnya memicu kebingungan.
 - Pengujian (Test Case): Pembuatan unit test / test case dibantu oleh AI untuk memastikan skenario pengujian autentikasi dan fungsionalitas aplikasi dapat berjalan secara komprehensif.
 Chat dengan gemini : https://gemini.google.com/share/d/1cCUDMaZERb6-xp_ZrBd-20uGyqD-OUo1?usp=sharing
+
+
+### Tugas 5
+Pada Tugas 5, halaman Experience diubah agar memuat data lewat AJAX (`fetch()`), dilengkapi pencarian dengan debouncing, modal tambah data, toast, dan perlindungan XSS.
+
+Ringkasan fitur (halaman Experience):
+- `show_experience` hanya merender kerangka halaman; data diambil dari `GET /api/experience/` (`JsonResponse` manual, termasuk `star_count`, `is_starred`, dan `starred_by_names`). Ada tampilan loading, data kosong, dan error (dengan tombol "Coba Lagi").
+- Pencarian `?q=` (field `title` dan `organization`) dengan debounce 300 ms dan `AbortController` agar respons lama tidak menimpa respons baru.
+- Modal tambah pengalaman (hanya dirender untuk superuser/editor) mengirim `POST /experience/add-ajax/` memakai Fetch API. View memvalidasi dengan `ExperienceForm` dan membalas `201` (berhasil), `400` (validasi gagal), atau `403` (belum login / bukan superuser atau Editor). Hak akses dicek di dalam view, bukan hanya dengan menyembunyikan tombol. Token CSRF dikirim lewat `csrfmiddlewaretoken` dan header `X-CSRFToken`; endpoint ini tidak memakai `@csrf_exempt`.
+- Toast untuk sukses dan gagal (termasuk pesan validasi dari server), serta pesan error di bawah masing-masing field.
+- Star pada Experience (tambahan agar info star dari Tugas 4 ikut ada di JSON): field `starred_by` di model, endpoint `POST /experience/<id>/star/`, dan tombol yang berubah tanpa reload.
+- XSS: semua teks dari JSON di-escape dengan `escapeHtml` (`static/js/utils.js`), dan `ExperienceForm` memanggil `strip_tags` pada `clean_title`, `clean_organization`, dan `clean_description`.
+
+**Setup tambahan Tugas 5:** ada migrasi baru (`0004_experience_starred_by`), jadi jalankan `python manage.py migrate` sebelum `runserver`.
+
+Pertanyaan Reflektif
+1. Apa itu debouncing dan mengapa penting pada pencarian AJAX?
+Debouncing adalah teknik menunda eksekusi sebuah fungsi sampai pengguna berhenti memicu event dalam jeda waktu tertentu. Setiap event baru mengatur ulang timer, sehingga fungsi hanya dijalankan sekali setelah event berhenti. Pada pencarian AJAX, tanpa debouncing setiap ketikan menghasilkan satu request. Mengetik "business" berarti 8 request, padahal hanya hasil terakhir yang dibutuhkan. Akibatnya server dan database terbebani, bandwidth terbuang, tampilan bisa berkedip, dan ada risiko race condition ketika respons lama tiba setelah respons baru lalu menimpa hasil yang benar. Dengan debounce 300 ms, request hanya dikirim setelah pengguna berhenti mengetik. Di proyek ini saya juga memakai `AbortController` untuk membatalkan request yang masih berjalan.
+
+2. Fungsi `await` pada `fetch()` dan apa yang terjadi jika tidak dipakai?
+`fetch()` bersifat asinkron dan langsung mengembalikan sebuah `Promise` yang belum selesai, bukan hasil responsnya. `await` menjeda eksekusi fungsi `async` sampai Promise itu selesai, lalu mengembalikan objek `Response`-nya, sementara halaman tetap responsif karena yang menunggu hanya fungsi tersebut. Jika `await` tidak dipakai, variabel `response` berisi Promise yang masih pending. Akibatnya `response.ok` bernilai `undefined`, `response.json()` gagal karena Promise tidak punya method tersebut, dan baris kode berikutnya berjalan sebelum data tiba (daftar tampil kosong atau error). Error jaringan juga tidak tertangkap oleh `try/catch` karena penolakan Promise terjadi di luar alur kode tersebut. Hal yang sama berlaku untuk `response.json()`, yang juga mengembalikan Promise dan perlu di-`await`.
+
+3. Apa itu XSS dan mengapa data lewat AJAX/JavaScript lebih rentan dibanding template Django?
+XSS (Cross-Site Scripting) adalah serangan ketika penyerang menyisipkan HTML atau JavaScript berbahaya (misalnya `<img src="x" onerror="alert('XSS!')">`) ke dalam data yang kemudian ditampilkan di halaman. Skrip tersebut berjalan di browser korban dan bisa mencuri cookie atau sesi, melakukan aksi atas nama korban, atau mengubah isi halaman. Template Django melakukan *auto-escape* pada `{{ variabel }}`, sehingga karakter `<`, `>`, `"`, `'`, dan `&` diubah menjadi entitas HTML dan tampil sebagai teks biasa. Pada AJAX, data JSON dirangkai sendiri menjadi string HTML (template literal) lalu dimasukkan lewat `innerHTML`, dan proses ini tidak punya auto-escape. Satu field yang lupa di-escape sudah cukup untuk membuka celah. Karena itu pertahanannya berlapis: `strip_tags` di server untuk menolak atau membersihkan input, serta `escapeHtml` atau `textContent` di sisi JavaScript untuk setiap nilai teks.
+
+AI DISCLOSURE
+* Tools: Claude (Anthropic).
+* Cara penggunaan: Saya menggunakan Claude sebagai alat bantu selama pengerjaan Tugas 5, terutama untuk memahami pola implementasi pada bagian Projects dari Tutorial 05 dan mengadaptasinya ke bagian Experience. Kode dan struktur proyek yang sudah tersedia saya gunakan sebagai acuan utama. Hasil kode yang diberikan oleh claude kemudian saya analisis dan saya ketik satu per satu agar lebih memahami fungsi kode tersebut.
+* Bagian yang dibantu AI: Beberapa implementasi dan revisi pada endpoint JSON, AJAX untuk menambah data dan star, validasi `ExperienceForm`, JavaScript pada `experience.js` dan `utils.js`, template Experience dan modal, migrasi, serta testing.
+* Link chat: https://claude.ai/share/0937efb9-c21e-45c9-a58e-e0d4a0607cfb
