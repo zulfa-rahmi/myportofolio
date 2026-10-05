@@ -1586,3 +1586,4 @@ svg.ticket-plane {
     bottom: 0;
     width: 100%;
 }
+.form-error:empty { display: none; }
