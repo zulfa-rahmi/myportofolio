@@ -22,4 +22,9 @@ urlpatterns = [
     path("", include("main.urls")),
 ]
 
+urlpatterns += [
+    path("api/v1/", include("main.api_urls")),
+    path("api-auth/", include("rest_framework.urls")),
+]
+
 CSRF_TRUSTED_ORIGINS = ["<https://zulfa-rahmi-myportofolio.pws.cs.ui.ac.id/>"]
