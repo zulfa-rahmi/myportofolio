@@ -154,3 +154,19 @@ AI DISCLOSURE
 * Cara penggunaan: Saya menggunakan Claude sebagai alat bantu selama pengerjaan Tugas 5, terutama untuk memahami pola implementasi pada bagian Projects dari Tutorial 05 dan mengadaptasinya ke bagian Experience. Kode dan struktur proyek yang sudah tersedia saya gunakan sebagai acuan utama. Hasil kode yang diberikan oleh claude kemudian saya analisis dan saya ketik satu per satu agar lebih memahami fungsi kode tersebut.
 * Bagian yang dibantu AI: Beberapa implementasi dan revisi pada endpoint JSON, AJAX untuk menambah data dan star, validasi `ExperienceForm`, JavaScript pada `experience.js` dan `utils.js`, template Experience dan modal, migrasi, serta testing.
 * Link chat: https://claude.ai/share/0937efb9-c21e-45c9-a58e-e0d4a0607cfb
+
+### Tugas 6
+
+1. REST (Representational State Transfer) adalah arsitektur untuk membangun layanan web dengan menggunakan resource dan HTTP methods. Mengembalikan JSON saja belum cukup untuk disebut RESTful karena API juga perlu mengikuti prinsip seperti resource-based URL, penggunaan HTTP methods yang sesuai, statelessness, dan status code yang tepat. PUT digunakan untuk mengganti keseluruhan representasi resource, sedangkan PATCH digunakan untuk memperbarui sebagian field. Contohnya, PUT digunakan ketika seluruh data Experience diperbarui, sedangkan PATCH digunakan ketika hanya title yang diubah.
+
+2. Serializer pada Django REST Framework berfungsi untuk mengubah objek model menjadi representasi data seperti JSON dan melakukan validasi input sebelum data disimpan. Dibandingkan membuat dictionary secara manual menggunakan JsonResponse, serializer menyediakan validasi, konversi tipe data, dan pengelolaan field secara lebih terstruktur.
+
+3. Autentikasi adalah proses untuk mengetahui identitas pengguna yang melakukan request, sedangkan otorisasi adalah proses menentukan tindakan apa yang boleh dilakukan pengguna. Permission class diperlukan di server karena menyembunyikan tombol pada template tidak mencegah pengguna mengirim request secara langsung ke endpoint API.
+
+4. SessionAuthentication menggunakan session dan cookie untuk mengenali pengguna. Karena browser dapat mengirim cookie secara otomatis, token CSRF diperlukan untuk memastikan request perubahan data memang berasal dari sumber yang dipercaya. force_authenticate hanya memaksakan identitas pengguna dalam testing dan tidak menjalankan proses login session maupun pemeriksaan CSRF yang sebenarnya.
+
+AI DISCLOSURE
+Tools: ChatGPT (OpenAI).
+Cara penggunaan: Saya menggunakan ChatGPT sebagai alat bantu selama pengerjaan Tugas 5, terutama untuk memahami, mengimplementasikan, dan memperbaiki fitur Experience dengan mengacu pada implementasi Projects yang sudah tersedia.
+Bagian yang dibantu AI: Debugging endpoint API, permission, integrasi AJAX dan JavaScript, template Experience, validasi form, serta perbaikan unit testing.
+Link chat: https://chatgpt.com/share/6af1e952-8864-83ec-824d-149aaf06b0e4
