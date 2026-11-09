@@ -81,12 +81,21 @@
 
     let manageHtml = '';
     if (CFG.canManage) {
-      const editUrl = CFG.editUrlTemplate.replace(DUMMY_ID, id);
-      manageHtml = `
-        <a href="${escapeHtml(editUrl)}" class="button button-secondary">Edit</a>
-        <button type="button" class="button button-danger js-delete"
-                data-id="${escapeHtml(id)}"
-                data-title="${escapeHtml(f.title)}">Hapus</button>`;
+        const editUrl = CFG.editUrlTemplate.replace(DUMMY_ID, id);
+
+        manageHtml += `
+            <a href="${escapeHtml(editUrl)}"
+              class="button button-secondary">Edit</a>`;
+    }
+
+    if (CFG.canDelete) {
+        manageHtml += `
+            <button type="button"
+                    class="button button-danger js-delete"
+                    data-id="${escapeHtml(id)}"
+                    data-title="${escapeHtml(f.title)}">
+                Hapus
+            </button>`;
     }
 
     const article = document.createElement('article');
@@ -185,7 +194,7 @@
   function showFieldErrors(errors) {
     const messages = [];
     Object.entries(errors).forEach(([field, list]) => {
-      const text = list.map(e => e.message).join(' ');
+      const text = list.map(e => typeof e === 'string' ? e : e.message).join(' ');
       const slot = experienceForm.querySelector(`[data-error-for="${field}"]`);
       if (slot) slot.textContent = text; // textContent -> aman dari XSS
       const label = field === '__all__' ? '' : fieldLabel(field);
@@ -215,8 +224,12 @@
         if (addModal) addModal.hidePopover();
         notify('Berhasil', 'Pengalaman baru berhasil ditambahkan!', 'success');
         fetchExperiences(searchInput.value.trim()); // perbarui daftar tanpa reload
-      } else if (response.status === 400 && result.errors) {
-        notify('Gagal menambahkan pengalaman', showFieldErrors(result.errors).join(' • '), 'error');
+      } else if (response.status === 400) {
+        notify(
+            'Gagal menambahkan pengalaman',
+            showFieldErrors(result).join(' • '),
+            'error'
+        );
       } else {
         notify(
           'Gagal menambahkan pengalaman',
@@ -280,6 +293,61 @@
     deleteModal.querySelectorAll('[data-close-delete]').forEach(el =>
       el.addEventListener('click', () => deleteModal.close())
     );
+  }
+
+  // ================= DELETE VIA DRF API =================
+
+  if (deleteForm) {
+      deleteForm.addEventListener('submit', async function (event) {
+          event.preventDefault();
+
+          const submitButton = deleteForm.querySelector(
+              'button[type="submit"]'
+          );
+
+          submitButton.disabled = true;
+
+          try {
+              const response = await fetch(deleteForm.action, {
+                  method: 'DELETE',
+                  headers: {
+                      'X-CSRFToken': getCookie('csrftoken'),
+                      'Accept': 'application/json',
+                  },
+              });
+
+              if (response.status === 204) {
+                  deleteModal.close();
+
+                  notify(
+                      'Berhasil',
+                      'Pengalaman berhasil dihapus.',
+                      'success'
+                  );
+
+                  fetchExperiences(searchInput.value.trim());
+              } else {
+                  const result = await response.json().catch(() => ({}));
+
+                  notify(
+                      'Gagal menghapus pengalaman',
+                      result.detail || result.message ||
+                      `Terjadi kesalahan (${response.status}).`,
+                      'error'
+                  );
+              }
+          } catch (error) {
+              console.error('Error deleting experience:', error);
+
+              notify(
+                  'Gagal menghapus pengalaman',
+                  'Tidak dapat terhubung ke server.',
+                  'error'
+              );
+          } finally {
+              submitButton.disabled = false;
+          }
+      });
   }
 
   // Event delegation: kartu dibuat ulang tiap fetch, jadi listener dipasang di grid

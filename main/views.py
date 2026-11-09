@@ -15,7 +15,7 @@ from django.utils.html import strip_tags
 from django.utils import dateformat
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
-
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 def can_manage(user):
     """True kalau user adalah superuser atau anggota group 'Editor'."""
@@ -178,7 +178,7 @@ def create_project_ajax(request):
     return HttpResponse(b"CREATED", status=201)
 
 # --- EXPERIENCE ---
-
+@ensure_csrf_cookie
 def show_experience(request):
     """Hanya merender kerangka halaman; datanya dimuat lewat fetch()
     ke get_experience_json."""
@@ -188,6 +188,7 @@ def show_experience(request):
         "title_query": request.GET.get("q", "").strip(),
         "can_manage": can_manage(request.user),
         "form": ExperienceForm(),
+        "is_owner": request.user.is_superuser,
     }
     return render(request, "experience.html", context)
 

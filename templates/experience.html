@@ -23,7 +23,7 @@
                 <button type="submit" class="button">Cari</button>
             </form>
 
-            {% if can_manage %}
+            {% if is_owner %}
             <button type="button"
                     class="button project-add-button"
                     popovertarget="add-experience-modal">
@@ -43,23 +43,41 @@
     </div>
 </section>
 
-{% if can_manage %}
+{% if is_owner %}
     {% include "components/experience_form_modal.html" %}
     {% include "components/experience_delete_modal.html" %}
 {% endif %}
 
+<div id="experience-config"
+    data-list-url="{% url 'api:experience-list' %}"
+    data-create-url="{% url 'api:experience-list' %}"
+    data-edit-url="{% url 'main:update_experience' '00000000-0000-0000-0000-000000000000' %}"
+    data-delete-url="{% url 'api:experience-detail' '00000000-0000-0000-0000-000000000000' %}"
+    data-star-url="{% url 'api:experience-star' '00000000-0000-0000-0000-000000000000' %}"
+    data-detail-url="{% url 'api:experience-detail' '00000000-0000-0000-0000-000000000000' %}"
+    data-can-manage="{{ can_manage|yesno:'true,false' }}"
+    data-can-delete="{{ is_owner|yesno:'true,false' }}"
+    data-is-authenticated="{{ user.is_authenticated|yesno:'true,false' }}">
+</div>
+
 <script>
-    // Konfigurasi untuk static/js/experience.js (URL & hak akses dari Django)
+    const configElement = document.getElementById('experience-config');
+
     window.EXPERIENCE_CONFIG = {
-        listUrl: "{% url 'main:get_experience_json' %}",
-        createUrl: "{% url 'main:create_experience_ajax' %}",
-        editUrlTemplate: "{% url 'main:update_experience' '00000000-0000-0000-0000-000000000000' %}",
-        deleteUrlTemplate: "{% url 'main:delete_experience' '00000000-0000-0000-0000-000000000000' %}",
-        starUrlTemplate: "{% url 'main:toggle_star_experience' '00000000-0000-0000-0000-000000000000' %}",
-        canManage: "{{ can_manage|yesno:'true,false' }}" === "true",
-        isAuthenticated: "{{ user.is_authenticated|yesno:'true,false' }}" === "true",
+        listUrl: configElement.dataset.listUrl,
+        createUrl: configElement.dataset.createUrl,
+        editUrlTemplate: configElement.dataset.editUrl,
+        deleteUrlTemplate: configElement.dataset.deleteUrl,
+        starUrlTemplate: configElement.dataset.starUrl,
+        detailUrlTemplate: configElement.dataset.detailUrl,
+
+        canManage: configElement.dataset.canManage === 'true',
+        canDelete: configElement.dataset.canDelete === 'true',
+        isAuthenticated: configElement.dataset.isAuthenticated === 'true'
     };
 </script>
+
 <script src="{% static 'js/utils.js' %}"></script>
+<script src="{% static 'js/toast.js' %}"></script>
 <script src="{% static 'js/experience.js' %}"></script>
 {% endblock %}

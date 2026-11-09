@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}{% if is_edit %}Edit Pengalaman{% else %}Tambah Pengalaman{% endif %}{% endblock %}
 {% block content %}
     <section class="page-hero">
@@ -10,8 +11,8 @@
         <div class="container">
             <div class="project-form-card">
                 <form method="post"
-                      action="{% if is_edit %}{% url 'main:update_experience' experience.id %}{% else %}{% url 'main:create_experience' %}{% endif %}"
-                      class="project-form">
+                    action="{% if is_edit %}{% url 'main:update_experience' experience.id %}{% else %}{% url 'main:create_experience' %}{% endif %}"
+                    class="project-form">
                     {% csrf_token %}
                     {% for field in form %}
                         {% if field.field.widget.input_type == 'checkbox' %}
@@ -39,4 +40,71 @@
             </div>
         </div>
     </section>
+
+    {% if is_edit %}
+<script src="{% static 'js/utils.js' %}"></script>
+<script src="{% static 'js/toast.js' %}"></script>
+
+<script>
+document.getElementById('experience-edit-form')
+    .addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const form = this;
+        const button = form.querySelector('button[type="submit"]');
+
+        button.disabled = true;
+
+        try {
+            const response = await fetch(
+                "{% url 'api:experience-detail' experience.id %}",
+                {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'Accept': 'application/json',
+                    },
+                    body: new FormData(form),
+                }
+            );
+
+            const result = await response.json().catch(() => ({}));
+
+            if (response.ok) {
+                showToast(
+                    'Berhasil',
+                    'Pengalaman berhasil diperbarui.',
+                    'success'
+                );
+
+                window.location.href =
+                    "{% url 'main:show_experience' %}";
+            } else if (response.status === 400) {
+                const errors = Object.entries(result)
+                    .map(([field, messages]) =>
+                        `${field}: ${messages.join(', ')}`
+                    )
+                    .join(' | ');
+
+                showToast('Validasi gagal', errors, 'error');
+            } else {
+                showToast(
+                    'Gagal memperbarui',
+                    result.detail || 'Anda tidak memiliki izin.',
+                    'error'
+                );
+            }
+        } catch (error) {
+            console.error(error);
+            showToast(
+                'Error',
+                'Tidak dapat terhubung ke server.',
+                'error'
+            );
+        } finally {
+            button.disabled = false;
+        }
+    });
+</script>
+{% endif %}
 {% endblock content %}
