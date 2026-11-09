@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from main.forms import ExperienceForm, ProjectForm
 from main.models import Experience, Project
+import re
 
 
 # ---------------------------------------------------------------------------
@@ -139,16 +140,28 @@ class ExperiencePageTest(UserMixin, TestCase):
         response = self.client.get(reverse("main:show_experience"))
 
         self.assertNotContains(response, self.experience.title)
-        self.assertContains(response, reverse("main:get_experience_json"))
+        self.assertContains(response, reverse("api:experience-list"))
         self.assertContains(response, 'id="loading"')
         self.assertContains(response, 'id="error"')
         self.assertContains(response, 'id="empty"')
+        self.assertContains(response, 'id="grid"')
 
     def test_add_modal_hidden_for_anonymous_visitor(self):
         response = self.client.get(reverse("main:show_experience"))
 
+        self.assertEqual(response.status_code, 200)
+
         self.assertNotContains(response, "add-experience-modal")
-        self.assertContains(response, "canManage: false")
+
+        self.assertContains(
+            response,
+            'data-can-manage="false"'
+        )
+
+        self.assertContains(
+            response,
+            'data-can-delete="false"'
+        )
 
     def test_add_modal_hidden_for_regular_user(self):
         self.client.force_login(self.user)
@@ -158,10 +171,22 @@ class ExperiencePageTest(UserMixin, TestCase):
 
     def test_add_modal_shown_for_superuser(self):
         self.client.force_login(self.admin)
+
         response = self.client.get(reverse("main:show_experience"))
 
+        self.assertEqual(response.status_code, 200)
+
         self.assertContains(response, "add-experience-modal")
-        self.assertContains(response, "canManage: true")
+
+        self.assertContains(
+            response,
+            'data-can-manage="true"'
+        )
+
+        self.assertContains(
+            response,
+            'data-can-delete="true"'
+        )
 
 
 class ExperienceJsonTest(UserMixin, TestCase):
@@ -474,74 +499,144 @@ class ProjectModelTest(UserMixin, TestCase):
 
 class ProjectPageTest(UserMixin, TestCase):
     def setUp(self):
-        self.project = make_project(project_url="https://example.com/twinstore")
+        self.project = make_project(
+            project_url="https://example.com/twinstore"
+        )
+        self.page_url = reverse("main:show_projects")
+        self.api_url = reverse("api:project-list")
 
     def test_page_uses_correct_template(self):
-        response = self.client.get(reverse("main:show_projects"))
+        response = self.client.get(self.page_url)
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "projects.html")
 
-    def test_page_shows_project_data(self):
-        response = self.client.get(reverse("main:show_projects"))
+    def test_page_is_skeleton_and_uses_api(self):
+        response = self.client.get(self.page_url)
 
-        self.assertContains(response, self.project.title)
-        self.assertContains(response, self.project.event)
-        self.assertContains(response, self.project.description)
-        self.assertContains(response, 'href="https://example.com/twinstore"')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, self.project.title)
+        self.assertContains(response, self.api_url)
+        self.assertContains(response, 'id="loading"')
+        self.assertContains(response, 'id="error"')
+        self.assertContains(response, 'id="empty"')
+        self.assertContains(response, 'id="grid"')
+
+    def test_project_data_is_available_through_api(self):
+        response = self.client.get(self.api_url)
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertEqual(len(data), 1)
+
+        project_data = data[0]
+
+        self.assertEqual(project_data["title"], "TwinStore AI")
+        self.assertEqual(project_data["event"], "Bizclash 3.0 2026")
+        self.assertEqual(
+            project_data["project_url"],
+            "https://example.com/twinstore"
+        )
 
     def test_link_button_hidden_when_no_project_url(self):
         Project.objects.all().delete()
-        make_project(title="Tanpa Link")
-        response = self.client.get(reverse("main:show_projects"))
 
-        self.assertNotContains(response, "Lihat Project")
+        make_project(
+            title="Tanpa Link",
+            project_url=""
+        )
+
+        response = self.client.get(self.api_url)
+        project_data = response.json()[0]
+
+        self.assertEqual(project_data["project_url"], "")
 
     def test_empty_state_when_no_data(self):
         Project.objects.all().delete()
-        response = self.client.get(reverse("main:show_projects"))
 
-        self.assertContains(response, "Belum ada proyek yang ditambahkan.")
+        response = self.client.get(self.page_url)
+
+        self.assertContains(
+            response,
+            "Belum ada proyek yang ditambahkan."
+        )
 
     def test_search_by_title_is_case_insensitive(self):
         make_project(title="Ecobyte")
-        response = self.client.get(reverse("main:show_projects"), {"title": "twinSTORE"})
 
-        self.assertContains(response, "TwinStore AI")
-        self.assertNotContains(response, "Ecobyte")
+        response = self.client.get(
+            self.api_url,
+            {"title": "twinSTORE"}
+        )
 
-    def test_search_without_result_shows_specific_empty_state(self):
-        response = self.client.get(reverse("main:show_projects"), {"title": "xyz"})
+        titles = [
+            item["title"]
+            for item in response.json()
+        ]
 
-        self.assertContains(response, "Tidak ada proyek dengan nama tersebut.")
-        self.assertNotContains(response, "Belum ada proyek yang ditambahkan.")
+        self.assertEqual(titles, ["TwinStore AI"])
+
+    def test_search_without_result_returns_empty_list(self):
+        response = self.client.get(
+            self.api_url,
+            {"title": "xyz"}
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])
 
     def test_cover_image_url_is_used_as_is(self):
         self.project.cover_image = "https://example.com/cover.png"
         self.project.save()
-        response = self.client.get(reverse("main:show_projects"))
 
-        self.assertContains(response, 'src="https://example.com/cover.png"')
+        response = self.client.get(self.api_url)
+        project_data = response.json()[0]
+
+        self.assertEqual(
+            project_data["cover_image"],
+            "https://example.com/cover.png"
+        )
 
     def test_cover_image_filename_resolves_to_static_folder(self):
         self.project.cover_image = "tanam.jpg"
         self.project.save()
-        response = self.client.get(reverse("main:show_projects"))
 
-        self.assertContains(response, "/static/img/projects/tanam.jpg")
+        response = self.client.get(self.api_url)
+        project_data = response.json()[0]
+
+        self.assertEqual(project_data["cover_image"], "tanam.jpg")
+
+        page_response = self.client.get(self.page_url)
+
+        self.assertContains(
+            page_response,
+            "/static/img/projects/"
+        )
 
     def test_add_and_delete_buttons_only_for_superuser(self):
-        response = self.client.get(reverse("main:show_projects"))
-        self.assertNotContains(response, reverse("main:create_project"))
+        response = self.client.get(self.page_url)
+
+        self.assertNotContains(
+            response,
+            reverse("main:create_project")
+        )
 
         self.client.force_login(self.user)
-        response = self.client.get(reverse("main:show_projects"))
-        self.assertNotContains(response, reverse("main:create_project"))
+        response = self.client.get(self.page_url)
+
+        self.assertNotContains(
+            response,
+            reverse("main:create_project")
+        )
 
         self.client.force_login(self.admin)
-        response = self.client.get(reverse("main:show_projects"))
-        self.assertContains(response, reverse("main:create_project"))
+        response = self.client.get(self.page_url)
 
+        self.assertContains(
+            response,
+            reverse("main:create_project")
+        )
 
 class ProjectJsonTest(TestCase):
     def test_returns_json_list(self):
@@ -552,7 +647,7 @@ class ProjectJsonTest(TestCase):
         self.assertEqual(response["Content-Type"], "application/json")
         data = response.json()
         self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]["model"], "main.project")
+        self.assertEqual(data[0]["pk"], str(Project.objects.first().id))
         self.assertEqual(data[0]["fields"]["title"], "TwinStore AI")
 
     def test_filters_by_title(self):
@@ -703,16 +798,42 @@ class ToggleStarTest(UserMixin, TestCase):
 
         self.assertEqual(self.client.post(url).status_code, 404)
 
-    def test_star_state_shown_on_projects_page(self):
+    def test_star_state_available_through_project_api(self):
         self.client.force_login(self.user)
-        response = self.client.get(reverse("main:show_projects"))
-        self.assertContains(response, "Jadilah yang pertama memberi star")
 
-        self.client.post(self.url)
-        response = self.client.get(reverse("main:show_projects"))
-        self.assertContains(response, "Unstar")
-        self.assertContains(response, "is-starred")
-        self.assertContains(response, "Dibintangi oleh biasa")
+        star_url = reverse(
+            "api:project-star",
+            args=[self.project.id]
+        )
+
+        # Sebelum memberikan star
+        response = self.client.get(
+            reverse("api:project-list")
+        )
+
+        project_data = response.json()[0]
+
+        self.assertFalse(project_data["is_starred"])
+        self.assertEqual(project_data["star_count"], 0)
+
+        # Memberikan star
+        response = self.client.post(star_url)
+
+        self.assertEqual(response.status_code, 200)
+
+        # Memeriksa status setelah star
+        response = self.client.get(
+            reverse("api:project-list")
+        )
+
+        project_data = response.json()[0]
+
+        self.assertTrue(project_data["is_starred"])
+        self.assertEqual(project_data["star_count"], 1)
+        self.assertIn(
+            "biasa",
+            project_data["starred_by_names"]
+        )
 
 
 # ---------------------------------------------------------------------------
